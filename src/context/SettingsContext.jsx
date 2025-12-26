@@ -20,9 +20,9 @@ export const SettingsProvider = ({ children }) => {
       throw error;
     } finally {
       setLoading(false);
-    }
-  }, []);
-
+    }  
+  }, []); 
+ 
   // ✅ Create a setting
   const createSetting = useCallback(async (payload) => {
     try {
@@ -33,7 +33,7 @@ export const SettingsProvider = ({ children }) => {
       console.error("Error creating setting:", error);
       throw error;
     }
-  }, []);
+  }, []); 
 
   // ✅ Update a setting
   const updateSetting = useCallback(async (id, payload) => {

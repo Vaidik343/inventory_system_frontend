@@ -6,7 +6,7 @@ const RoleContext = createContext(null);
 
 export const RoleProvider = ({children}) => {
 
-    const [role, setRole] = useState([]);
+    const [roles, setRole] = useState([]);
     const [roleID, setRoleId] = useState([]);
     const [loading , setLoading] = useState(false);
 
@@ -14,7 +14,7 @@ export const RoleProvider = ({children}) => {
     const createRole = useCallback(async(payload) => {
         try {
             const {data} = await api.post(ENDPOINTS.ROLES.CREATE,payload);
-            setRole((prev) => [...prev, role]);
+            setRole((prev) => [...prev, data]);
             return data;
         } catch (error) {
             console.log("Error in creating role", error);
@@ -26,6 +26,8 @@ export const RoleProvider = ({children}) => {
         setLoading(true);
         try {
             const {data} = await api.get(ENDPOINTS.ROLES.ALL);
+            console.log("🚀 ~ RoleProvider ~ data:", data)
+            
             setRole(data);
             return data;
         } catch (error) {
@@ -60,10 +62,10 @@ export const RoleProvider = ({children}) => {
         }
     }, [])
 
-    const value = useMemo(()=> {
-        role, setRole, roleID, setRoleId, loading, createRole, getAllRoles, getRoleById, deleteRole
+    const value = useMemo(()=> ({
+        roles, setRole, roleID, setRoleId, loading, createRole, getAllRoles, getRoleById, deleteRole
 
-    }, [role, createRole, roleID,getAllRoles, getRoleById, deleteRole])
+    }), [roles, createRole, roleID,getAllRoles, getRoleById, deleteRole])
 
     return(
         <RoleContext.Provider value={value}>{children}</RoleContext.Provider>
@@ -71,4 +73,12 @@ export const RoleProvider = ({children}) => {
 
 }
 
-export const useRole = () => useContext(RoleContext);
+export const useRole = () => {
+  const context = useContext(RoleContext);
+
+  if (!context) {
+    throw new Error("useRole must be used inside RoleProvider");
+  }
+
+  return context;
+};

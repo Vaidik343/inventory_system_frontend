@@ -23,7 +23,7 @@ export const UsersProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ Create user
+  
   const createUser = useCallback(async (payload) => {
     try {
       const { data } = await api.post(ENDPOINTS.USER.CREATE, payload);
@@ -35,7 +35,6 @@ export const UsersProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ Update user
   const updateUser = useCallback(async (id, payload) => {
     try {
       const { data } = await api.put(ENDPOINTS.USER.UPDATE(id), payload);

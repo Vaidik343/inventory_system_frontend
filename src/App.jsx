@@ -8,6 +8,11 @@ import Categories from './pages/Categories.jsx';
 import { PurchaseProvider } from './context/PurchaseContext.jsx';
 import Purchase from './pages/Purchase.jsx';
 import Supplier from './pages/Supplier.jsx';
+import { SettingsProvider } from './context/SettingsContext.jsx';
+import Settings from './pages/Settings.jsx';
+import { UsersProvider } from './context/UserContext.jsx';
+import User from './pages/User.jsx';
+import { RoleProvider } from './context/RoleContext.jsx';
 
  
 
@@ -16,26 +21,20 @@ function App() {
 
   return (
     <>
-    {/* <ProductProvider>
-      <CategoriesProvider>
-        <SuppliersProvider>
-                 <Products />
-        </SuppliersProvider>
-      </CategoriesProvider>
-    </ProductProvider>
-    <CategoriesProvider>
-      <Categories />
-    </CategoriesProvider> */}
-{/* <PurchaseProvider>
-  <ProductProvider> */}
-    <SuppliersProvider>
-      {/* <Purchase /> */}
-        <Supplier />
-    </SuppliersProvider>
-  {/* </ProductProvider>
-</PurchaseProvider> */}
+   
+
+{/* <SettingsProvider>
+  <Settings />
+</SettingsProvider> */}
+
+<UsersProvider>
+  <RoleProvider>
+  <User />
+  </RoleProvider>
+</UsersProvider>
     </>
   )
 }
 
 export default App
+ 

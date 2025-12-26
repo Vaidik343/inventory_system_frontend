@@ -56,4 +56,4 @@ export const ENDPOINTS = {
         UPDATE: (id) =>`/user/${id}`, //patch
         PATCH:(id) =>`/user/${id}`
     }
-}
+}  
