@@ -10,14 +10,14 @@ import { ENDPOINTS } from "../api/endpoints";
 
 const SalesContext = createContext(null);
 
-export const salesProvider = ({ children }) => {
+export const SalesProvider = ({ children }) => {
   const [sales, setSales] = useState([]);
   // const [salesId, setSalesId] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const createSales = useCallback(async (payload) => {
     try {
-      const { data } = await api.post(ENDPOINTS.SALES.CREATE(payload));
+      const { data } = await api.post(ENDPOINTS.SALES.CREATE,payload);
       setSales((prev) => [...prev, data]);
       return data;
     } catch (error) {
@@ -30,6 +30,7 @@ export const salesProvider = ({ children }) => {
     setLoading(true);
     try {
       const { data } = await api.get(ENDPOINTS.SALES.ALL);
+      console.log("🚀 ~ SalesProvider ~ data:", data)
       setSales(data.sales ||data);
       return data.sales ||data;
     } catch (error) {
@@ -52,7 +53,7 @@ export const salesProvider = ({ children }) => {
     }
   }, []);
 
-  const cancelSales = useCallback(async (id) => {
+  const cancelSale = useCallback(async (id) => {
     try {
       const { data } = await api.patch(ENDPOINTS.SALES.PATCH(id),{});
       setSales((prev) =>
@@ -64,9 +65,9 @@ export const salesProvider = ({ children }) => {
       console.log("Error in sales cancel", error);
       throw error;
     }
-  }, []);
+  }, []); 
 
-  const value = useMemo(() => {
+  const value = useMemo(() => ({
     sales,
       // salesId,
    
@@ -75,8 +76,8 @@ export const salesProvider = ({ children }) => {
       createSales,
       getAllSales,
       getSalesById,
-      cancelSales;
-  }, [sales,loading,  createSales, getAllSales, getSalesById, cancelSales]);
+      cancelSale
+  }), [sales,loading,  createSales, getAllSales, getSalesById, cancelSale]);
 
   return (
     <SalesContext.Provider value={value}>{children}</SalesContext.Provider>

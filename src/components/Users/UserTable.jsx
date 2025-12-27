@@ -21,17 +21,21 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useUsers } from "../../context/UserContext";
+import { useRole } from "../../context/RoleContext";
 
 const UserTable = () => {
   const { users, getAllUsers, updateUser, deactivateUser, loading } =
     useUsers();
+
+  const { roles, getAllRoles } = useRole();
 
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     getAllUsers();
-  }, [getAllUsers]);
+    getAllRoles();
+  }, [getAllUsers, getAllRoles]);
 
   const handleEditOpen = (user) => {
     setSelectedUser({ ...user });
@@ -75,11 +79,9 @@ const UserTable = () => {
           <TableBody>
             {users.map((user) => (
               <TableRow key={user._id}>
-                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.role?.name || user.role}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  {user.isActive ? "Yes" : "No"}
-                </TableCell>
+                <TableCell>{user.isActive ? "Yes" : "No"}</TableCell>
                 <TableCell>
                   {user.last_login
                     ? new Date(user.last_login).toLocaleString()
@@ -87,10 +89,7 @@ const UserTable = () => {
                 </TableCell>
 
                 <TableCell align="center">
-                  <IconButton
-                    color="primary"
-                    onClick={() => handleEditOpen(user)}
-                  >
+                  <IconButton onClick={() => handleEditOpen(user)}>
                     <EditIcon />
                   </IconButton>
 
@@ -108,19 +107,23 @@ const UserTable = () => {
         </Table>
       </TableContainer>
 
-      {/* 🔧 Edit Dialog */}
+      {/* Edit Dialog */}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Update User</DialogTitle>
 
         <DialogContent sx={{ mt: 1 }}>
           <Select
             fullWidth
-            value={selectedUser?.role || ""}
-            onChange={(e) => handleEditChange("role", e.target.value)}
+            value={selectedUser?.role?._id || selectedUser?.role || ""}
+            onChange={(e) =>
+              handleEditChange("role", e.target.value)
+            }
           >
-            <MenuItem value="admin">Admin</MenuItem>
-            <MenuItem value="manager">Manager</MenuItem>
-            <MenuItem value="staff">Staff</MenuItem>
+            {roles.map((role) => (
+              <MenuItem key={role._id} value={role._id}>
+                {role.name}
+              </MenuItem>
+            ))}
           </Select>
 
           <Switch

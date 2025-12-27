@@ -13,8 +13,11 @@ import Settings from './pages/Settings.jsx';
 import { UsersProvider } from './context/UserContext.jsx';
 import User from './pages/User.jsx';
 import { RoleProvider } from './context/RoleContext.jsx';
+import {SalesProvider} from './context/SalesContext.jsx';
+import Sales from './pages/Sales.jsx';
+import { StockProvider } from './context/StockAdjustmentContext.jsx';
+import StockAdjustment from './pages/StockAdjustment.jsx';
 
- 
 
 function App() {
 
@@ -27,11 +30,26 @@ function App() {
   <Settings />
 </SettingsProvider> */}
 
-<UsersProvider>
+{/* <UsersProvider>
   <RoleProvider>
   <User />
   </RoleProvider>
-</UsersProvider>
+</UsersProvider> */}
+{/* 
+<SalesProvider>
+  <ProductProvider>
+  <Sales />
+  </ProductProvider>
+</SalesProvider> */}
+
+  <StockProvider>
+    <ProductProvider>
+      <UsersProvider>
+    <StockAdjustment />
+    </UsersProvider>
+    </ProductProvider>
+  </StockProvider>
+
     </>
   )
 }

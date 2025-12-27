@@ -1,6 +1,6 @@
 import React, {
   useState,
-  useContext,
+  useContext, 
   useCallback,
   useMemo,
   createContext,
@@ -27,7 +27,7 @@ export const StockProvider = ({ children }) => {
     }
   }, []);
 
-  const getAllSTKADJ = useCallback(async () => {
+  const getAllAdjustments = useCallback(async () => {
     setLoading(true);
     try {
       const { data } = await api.get(ENDPOINTS.STOCKADJUSTMENT.ALL);
@@ -40,9 +40,9 @@ export const StockProvider = ({ children }) => {
     }
   }, []);
 
-  const value = useMemo(() => {
-    stk, loading, createStock, getAllSTKADJ;
-  }, [stk, loading, createStock, getAllSTKADJ]);
+  const value = useMemo(() => ({
+    stk, loading, createStock, getAllAdjustments
+  }), [stk, loading, createStock, getAllAdjustments]);
 
   return (
     <StockAdjustmentContext.Provider value={value}>
@@ -51,4 +51,4 @@ export const StockProvider = ({ children }) => {
   );
 };
 
-export const useStock = () => useContext(StockAdjustmentContext);
+export const useStockAdjustment = () => useContext(StockAdjustmentContext);

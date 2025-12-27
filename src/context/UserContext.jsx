@@ -13,6 +13,7 @@ export const UsersProvider = ({ children }) => {
     try {
       setLoading(true);
       const { data } = await api.get(ENDPOINTS.USER.ALL);
+      console.log("🚀 ~ UsersProvider ~ data:", data)
       setUsers(data);
       return data;
     } catch (error) {

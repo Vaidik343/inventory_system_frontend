@@ -29,7 +29,7 @@ export const ENDPOINTS = {
         DELETE: (id) => `/roles/${id}` //make change in backend for id
         //CHECK and add update
     },
-    SALES:{
+    SALES:{ 
         CREATE:"/sales",
         ALL:"/sales",
         BY_ID: (id) => `/sales/${id}`,
