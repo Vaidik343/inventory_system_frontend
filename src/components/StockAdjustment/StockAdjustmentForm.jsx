@@ -3,16 +3,21 @@ import {
   Box,
   Paper,
   Typography,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   TextField,
   MenuItem,
   Button,
 } from "@mui/material";
 import { useProduct } from "../../context/ProductContext"; // assume you have this
 import { useStockAdjustment } from "../../context/StockAdjustmentContext"; // custom context for API
+import AddIcon from "@mui/icons-material/Add";
 
 const StockAdjustmentForm = () => {
   const { products, getAllProducts } = useProduct();
   const { createStock } = useStockAdjustment();
+  const [open, setOpen] = useState(false);
 
   const [form, setForm] = useState({
     productId: "",
@@ -34,6 +39,7 @@ const StockAdjustmentForm = () => {
     try {
       await createStock(form);
       alert("Stock adjusted successfully!");
+      setOpen(false);
       setForm({ productId: "", changes: 0, reason: "", referenceId: "" });
     } catch (error) {
       console.error("Stock adjustment failed", error);
@@ -43,10 +49,18 @@ const StockAdjustmentForm = () => {
 
   return (
     <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Adjust Stock
-      </Typography>
 
+      <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setOpen(true)}
+      >
+        Adjust Stock
+      </Button>
+      
+  <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>   Adjust Stock</DialogTitle>
+        <DialogContent>
       <TextField
         select
         label="Product"
@@ -90,6 +104,8 @@ const StockAdjustmentForm = () => {
       <Button variant="contained" color="primary" onClick={handleSubmit}>
         Submit
       </Button>
+      </DialogContent>
+      </Dialog>
     </Paper>
   );
 };

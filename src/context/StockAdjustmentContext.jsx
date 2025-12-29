@@ -10,10 +10,10 @@ import { ENDPOINTS } from "../api/endpoints";
 
 const StockAdjustmentContext = createContext(null);
 
-export const StockProvider = ({ children }) => {
+export const StockAdjustmentProvider = ({ children }) => {
   const [stk, setStk] = useState([]);
   const [loading, setLoading] = useState(false);
-
+ 
   const createStock = useCallback(async (payload) => {
     try {
       const { data } = await api.post(

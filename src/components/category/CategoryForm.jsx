@@ -26,7 +26,9 @@ const CategoryForm = () => {
     try {
       await createCategory(form);
       setForm({ name: "" });
+
       setOpen(false);
+      
     } catch (error) {
       console.log("Failed to create category", error);
     }

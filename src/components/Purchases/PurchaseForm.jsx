@@ -5,6 +5,9 @@ import {
   TextField,
   MenuItem,
   Grid,
+  Dialog,
+
+  DialogContent,
   Paper,
   Typography,
   IconButton,
@@ -29,7 +32,7 @@ const PurchaseForm = () => {
   const { createPurchase } = usePurchase();
   const { products, getAllProducts } = useProduct();
   const { suppliers, getAllSuppliers } = useSuppliers();
-
+  const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     supplierId: "",
     tax: 0,
@@ -84,7 +87,7 @@ const PurchaseForm = () => {
 
     try {
       await createPurchase(form);
-
+      setOpen(false)
       // reset
       setForm({
         supplierId: "",
@@ -99,11 +102,21 @@ const PurchaseForm = () => {
 
   return (
     <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Create Purchase
-      </Typography>
+
+      <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setOpen(true)}
+      >
+        Add Purchase
+      </Button>
+      
 
       {/* Supplier */}
+      
+      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
+       
+        <DialogContent>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <TextField
@@ -243,6 +256,8 @@ const PurchaseForm = () => {
       <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
         Save Purchase
       </Button>
+          </DialogContent>
+      </Dialog>
     </Paper>
   );
 };

@@ -2,9 +2,7 @@ import React,{useEffect, useState,useContext, createContext, useMemo, useCallbac
 import api from "../api/axiosInstance";
 import { ENDPOINTS } from "../api/endpoints";
 
-const CategoryContext = createContext();
-
-
+const CategoryContext = createContext(null);
 
 export const CategoriesProvider = ({children}) => {
 const [categories, setCategories] = useState([]);

@@ -22,13 +22,8 @@ import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import { alpha, styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import { useSearch } from "../context/SearchContext";
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import BackupIcon from '@mui/icons-material/Backup';
-import PaymentIcon from "@mui/icons-material/Payment";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import BackupIcon from "@mui/icons-material/Backup";
-import PeopleIcon from "@mui/icons-material/People";
+import BackupIcon from '@mui/icons-material/Backup';  
 const drawerWidth = 240;
 
 const Search = styled("div")(({ theme }) => ({
@@ -70,7 +65,7 @@ export default function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const location = useLocation();
-  const { searchQuery, setSearchQuery } = useSearch();
+  // const { searchQuery, setSearchQuery } = useSearch();
 
   const handleDrawerToggle = () => {
     if (!isClosing) setMobileOpen(!mobileOpen);
@@ -84,7 +79,7 @@ export default function ResponsiveDrawer(props) {
   const handleDrawerTransitionEnd = () => setIsClosing(false);
 
   const menuItems = [
-    { text: "Dashboard", icon: <AssignmentIcon />, path: "/appointments" },
+    { text: "Dashboard", icon: <AssignmentIcon />, path: "/" },
     { text: "Products", icon: <PaymentIcon />, path: "/products" },
     { text: "Categories", icon: <PeopleIcon />, path: "/category" },
     { text: "Supplier", icon: <AssignmentIndIcon />, path: "/supplier" },
@@ -94,6 +89,7 @@ export default function ResponsiveDrawer(props) {
     { text: "Stock Adjustment", icon: <BackupIcon />, path: "/stock" },
    
     { text: "Settings", icon: <BackupIcon />, path: "/setting" },
+    { text: "User", icon: <BackupIcon />, path: "/user" },
   ];
 
   const drawer = (
@@ -143,11 +139,11 @@ export default function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-            Clinic Management
+            Inventory System
           </Typography>
 
           {/* 🔍 Search Bar */}
-          <Search>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -157,7 +153,7 @@ export default function ResponsiveDrawer(props) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-          </Search>
+          </Search> */}
         </Toolbar>
       </AppBar>
 

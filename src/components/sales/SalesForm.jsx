@@ -6,6 +6,9 @@ import {
   MenuItem,
   Grid,
   Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
   Typography,
   IconButton,
   Divider,
@@ -26,6 +29,7 @@ const emptyItem = {
 const SalesForm = () => {
   const { createSales } = useSales();
   const { products, getAllProducts } = useProduct();
+    const [open, setOpen] = useState(false);
 
   const [form, setForm] = useState({
     payment_status: "pending",
@@ -79,7 +83,7 @@ const SalesForm = () => {
 
     try {
       await createSales(form);
-
+      setOpen(false)
       // reset
       setForm({
         payment_status: "pending",
@@ -92,9 +96,16 @@ const SalesForm = () => {
 
   return (
     <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Create Sale
-      </Typography>
+       <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setOpen(true)}
+      >
+        Add Sales
+      </Button>
+        <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
+            <DialogTitle>Create Sale</DialogTitle>
+<DialogContent>
 
       {/* Payment Status */}
       <Grid container spacing={2}>
@@ -201,6 +212,8 @@ const SalesForm = () => {
       <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
         Save Sale
       </Button>
+      </DialogContent>
+      </Dialog>
     </Paper>
   ); 
 };

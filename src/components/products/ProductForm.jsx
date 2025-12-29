@@ -23,7 +23,7 @@ export default function ProductCreate() {
     sku: "",
     cost: "",
     sell_price: "",
-    stock_qty: "",
+    stock_qty: "", 
   });
 
   const handleChange = (e) => {

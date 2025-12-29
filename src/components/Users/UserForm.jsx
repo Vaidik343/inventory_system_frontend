@@ -9,8 +9,11 @@ import {
   Switch,
   Typography,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent
 } from "@mui/material";
-
+import AddIcon from "@mui/icons-material/Add";
 import { useUsers } from "../../context/UserContext";
 import { useRole } from "../../context/RoleContext";
 
@@ -24,7 +27,8 @@ const initialForm = {
 const UserForm = () => {
   const { createUser, loading } = useUsers();
   const { roles, getAllRoles } = useRole();
-  console.log("🚀 ~ UserForm ~ role:", roles)
+
+  const [open, setOpen] = useState(false);
 
   const [form, setForm] = useState(initialForm);
 
@@ -40,6 +44,7 @@ const UserForm = () => {
   const handleSubmit = async () => {
     try {
       await createUser(form);
+      setOpen(false);
       setForm(initialForm);
     } catch (error) {
       console.error("Failed to create user", error);
@@ -50,10 +55,18 @@ const UserForm = () => {
 
   return (
     <Paper sx={{ p: 3, mb: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Create User
-      </Typography>
 
+         <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setOpen(true)}
+      >
+        User
+      </Button>
+    <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
+            <DialogTitle>Create User</DialogTitle>
+
+  <DialogContent>
       <Grid container spacing={2}>
         {/* Email */}
         <Grid item xs={12} md={6}>
@@ -81,7 +94,7 @@ const UserForm = () => {
         </Grid>
 
         {/* Role dropdown */}
-        <Grid item xs={12} md={6}>
+        <Grid item md={6} >
           <TextField
             select
             label="Role"
@@ -125,6 +138,8 @@ const UserForm = () => {
           {loading ? "Saving..." : "Save User"}
         </Button>
       </Box>
+      </DialogContent>
+      </Dialog>
     </Paper>
   );
 };

@@ -1,58 +1,40 @@
-import { useState } from 'react'
-import {ProductProvider} from './context/ProductContext.jsx';
-import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
-import Products from './pages/Products.jsx';
-import { CategoriesProvider } from './context/CategoryContext.jsx';
-import { SuppliersProvider } from './context/SupplierContext.jsx';
-import Categories from './pages/Categories.jsx';
-import { PurchaseProvider } from './context/PurchaseContext.jsx';
-import Purchase from './pages/Purchase.jsx';
-import Supplier from './pages/Supplier.jsx';
-import { SettingsProvider } from './context/SettingsContext.jsx';
-import Settings from './pages/Settings.jsx';
-import { UsersProvider } from './context/UserContext.jsx';
-import User from './pages/User.jsx';
-import { RoleProvider } from './context/RoleContext.jsx';
-import {SalesProvider} from './context/SalesContext.jsx';
-import Sales from './pages/Sales.jsx';
-import { StockProvider } from './context/StockAdjustmentContext.jsx';
-import StockAdjustment from './pages/StockAdjustment.jsx';
+import { Routes, Route } from "react-router-dom";
 
+/* Layout */
+import Drawer from "./components/Drawer";
 
+/* Pages */
+import Dashboard from "./components/Dashboard";
+import Products from "./pages/Products";
+import Categories from "./pages/Categories";
+import Supplier from "./pages/Supplier";
+import Purchase from "./pages/Purchase";
+import Sales from "./pages/Sales";
+import StockAdjustment from "./pages/StockAdjustment";
+import Settings from "./pages/Settings";
+import User from "./pages/User";
+import Login from './components/Login'
+import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
-
-
   return (
-    <>
-   
-
-{/* <SettingsProvider>
-  <Settings />
-</SettingsProvider> */}
-
-{/* <UsersProvider>
-  <RoleProvider>
-  <User />
-  </RoleProvider>
-</UsersProvider> */}
-{/* 
-<SalesProvider>
-  <ProductProvider>
-  <Sales />
-  </ProductProvider>
-</SalesProvider> */}
-
-  <StockProvider>
-    <ProductProvider>
-      <UsersProvider>
-    <StockAdjustment />
-    </UsersProvider>
-    </ProductProvider>
-  </StockProvider>
-
-    </>
-  )
+    <Routes>
+      {/* Layout Route (Drawer always visible) */}
+       <Route path="/login" element={<Login />} />
+      <Route element={<Drawer />}>
+       {/* <Route element={<ProtectedRoute />}> */}
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/category" element={<Categories />} />
+        <Route path="/supplier" element={<Supplier />} />
+        <Route path="/purchase" element={<Purchase />} />
+        <Route path="/sales" element={<Sales />} />
+        <Route path="/stock" element={<StockAdjustment />} />
+        <Route path="/setting" element={<Settings />} />
+        <Route path="/user" element={<User />} />
+      </Route>
+      {/* </Route> */}
+    </Routes>
+  );
 }
 
-export default App
- 
+export default App;

@@ -6,7 +6,10 @@ import {
   Paper,
   TextField,
   Typography,
+  Dialog,
+  DialogContent
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { useSuppliers } from "../../context/SupplierContext";
 
 const initialForm = {
@@ -27,6 +30,7 @@ const initialForm = {
 const SupplierForm = () => {
   const { createSupplier, loading } = useSuppliers();
   const [form, setForm] = useState(initialForm);
+  const [open, setOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,6 +58,7 @@ const SupplierForm = () => {
         
       await createSupplier(form);
       setForm(initialForm);
+      setOpen(false);
     } catch (error) {
       console.error("Error while creating supplier", error);
     }
@@ -61,10 +66,18 @@ const SupplierForm = () => {
 
   return (
     <Paper sx={{ p: 3, mb: 3 }}>
+       <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setOpen(true)}
+      >
+        Add Supplier
+      </Button>
+       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
       <Typography variant="h6" gutterBottom>
         Create Supplier
       </Typography>
-
+ <DialogContent>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <TextField
@@ -187,6 +200,9 @@ const SupplierForm = () => {
           {loading ? "Saving..." : "Save Supplier"}
         </Button>
       </Box>
+
+      </DialogContent>
+      </Dialog>
     </Paper>
   );
 };

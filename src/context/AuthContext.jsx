@@ -1,11 +1,11 @@
 import React,{useEffect, useContext, useMemo, createContext, useState} from "react";
 import { ENDPOINTS } from "../api/endpoints";
+import api from "../api/axiosInstance";
+import { jwtDecode } from "jwt-decode";
 
-const AuthContext = useContext();
-
+const AuthContext = createContext(null);
 
 // add call back in every function
-
 
 export const AuthProvider = ({children}) => {
 const [user, setUser] = useState(null);
@@ -20,7 +20,7 @@ const login = async (payload) => {
         const {accessToken} = data;
         setAccessToken(accessToken);
 
-        const decoded = jwt_decode(accessToken);
+        const decoded = jwtDecode(accessToken);
         setUser(decoded);
 
         return data;

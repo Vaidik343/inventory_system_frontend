@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import { useSettings } from '../../context/SettingsContext'
-import { Button, Paper, TableContainer, Grid,Box, TextField, Typography } from '@mui/material';
+import {
+   Button, Paper, TableContainer, Grid,Box, TextField, Typography ,
+   Dialog,DialogTitle, DialogContent
+  }
+ from '@mui/material';
+import AddIcon from "@mui/icons-material/Add";
 
 const settingForm = {
      companyName:"",
@@ -18,7 +23,7 @@ const settingForm = {
 const SettingForm = () => {
 
     const {createSetting, loading } = useSettings();
-
+    const [open, setOpen] = useState(false);
     const [form,setForm] = useState(settingForm);
 
     const handleChange = async(e) => {
@@ -33,7 +38,9 @@ const SettingForm = () => {
     }
     const handleSubmit = async() => {
         try {
-        await createSetting(form)
+        await createSetting(form);
+
+        setOpen(false);
         setForm(settingForm);            
         } catch (error) {
             console.log("error in submitting data!");
@@ -43,7 +50,17 @@ const SettingForm = () => {
 
   return (
     <Paper>
-    <Typography variant='h6' gutterBottom>Create settings</Typography>
+        <Button
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setOpen(true)}
+      >
+        Setting
+      </Button>
+     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>Create setting</DialogTitle>
+        
+                <DialogContent>
     <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
             <TextField
@@ -111,7 +128,8 @@ const SettingForm = () => {
             {loading ? "Saving..." : "Save Settings"}
         </Button>
     </Box>
-
+</DialogContent>
+</Dialog>
     </Paper>
   )
 }
