@@ -23,6 +23,7 @@ const Login = () => {
         const result = await login(form);
 
         if(result){
+            
             setForm("");
             navigate("/");
         }

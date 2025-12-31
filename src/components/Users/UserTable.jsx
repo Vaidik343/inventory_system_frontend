@@ -19,23 +19,35 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SecurityIcon from "@mui/icons-material/Security";
 
 import { useUsers } from "../../context/UserContext";
 import { useRole } from "../../context/RoleContext";
+import { useAuth } from "../../context/AuthContext";
+import { resolvePermissions } from "../../utils/resolvePermissions";
+import PermissionDialog from "./PermissionDialog";
 
 const UserTable = () => {
   const { users, getAllUsers, updateUser, deactivateUser, loading } =
     useUsers();
 
   const { roles, getAllRoles } = useRole();
+  const { userPermissions } = useAuth();
 
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [permissionOpen, setPermissionOpen] = useState(false);
+  const [selectedUserForPermission, setSelectedUserForPermission] = useState(null);
+
+  const perms = resolvePermissions(userPermissions);
+  const canViewUsers = perms.can("user", "view");
 
   useEffect(() => {
-    getAllUsers();
-    getAllRoles();
-  }, [getAllUsers, getAllRoles]);
+    if (canViewUsers) {
+      getAllUsers();
+      getAllRoles();
+    }
+  }, [getAllUsers, getAllRoles, canViewUsers]);
 
   const handleEditOpen = (user) => {
     setSelectedUser({ ...user });
@@ -60,7 +72,22 @@ const UserTable = () => {
     }
   };
 
+  const handlePermissionOpen = (user) => {
+    setSelectedUserForPermission(user);
+    setPermissionOpen(true);
+  };
+
   if (loading) return <CircularProgress />;
+
+  if (!canViewUsers) {
+    return (
+      <Box p={3}>
+        <Typography variant="h6" color="error">
+          You do not have permission to view users.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -91,6 +118,10 @@ const UserTable = () => {
                 <TableCell align="center">
                   <IconButton onClick={() => handleEditOpen(user)}>
                     <EditIcon />
+                  </IconButton>
+
+                  <IconButton onClick={() => handlePermissionOpen(user)}>
+                    <SecurityIcon />
                   </IconButton>
 
                   <IconButton
@@ -142,6 +173,13 @@ const UserTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Permission Dialog */}
+      <PermissionDialog
+        open={permissionOpen}
+        onClose={() => setPermissionOpen(false)}
+        user={selectedUserForPermission}
+      />
     </>
   );
 };

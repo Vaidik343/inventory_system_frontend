@@ -84,6 +84,7 @@ export default function ResponsiveDrawer(props) {
     { text: "Categories", icon: <PeopleIcon />, path: "/category" },
     { text: "Supplier", icon: <AssignmentIndIcon />, path: "/supplier" },
     { text: "Purchases", icon: <MedicalServicesIcon />, path: "/purchase" },
+    { text: "Reports", icon: <MedicalServicesIcon />, path: "/reports" },
  
     { text: "Sales", icon: <AssessmentIcon />, path: "/sales" },
     { text: "Stock Adjustment", icon: <BackupIcon />, path: "/stock" },

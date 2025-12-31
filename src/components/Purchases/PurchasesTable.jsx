@@ -12,6 +12,8 @@ import {
   Box,
 } from "@mui/material";
 import { usePurchase } from "../../context/PurchaseContext";
+import { useAuth } from "../../context/AuthContext";
+import { resolvePermissions } from "../../utils/resolvePermissions";
 
 const statusColor = (status) => {
   switch (status) {
@@ -28,12 +30,28 @@ const statusColor = (status) => {
 
 const PurchaseTable = () => {
   const { purchases, getAllPurchase, loading } = usePurchase();
+  const { userPermissions } = useAuth();
+
+  const perms = resolvePermissions(userPermissions);
+  const canViewPurchases = perms.can("purchase", "view");
 
   useEffect(() => {
-    getAllPurchase();
-  }, []);
+    if (canViewPurchases) {
+      getAllPurchase();
+    }
+  }, [canViewPurchases]);
 
   if (loading) return <Typography>Loading purchases...</Typography>;
+
+  if (!canViewPurchases) {
+    return (
+      <Box p={3}>
+        <Typography variant="h6" color="error">
+          You do not have permission to view purchases.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <TableContainer component={Paper}>

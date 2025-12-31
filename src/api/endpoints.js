@@ -1,8 +1,8 @@
 export const ENDPOINTS = {
     AUTH: {
-        LOGIN:"auth/login",
+        LOGIN:"/auth/login",
         REFRESH_TOKEN:"/refresh",
-        LOGOUT:"auth/logout"
+        LOGOUT:"/logout"
     },
     CATEGORY: {
         CREATE:"/category",
@@ -29,6 +29,11 @@ export const ENDPOINTS = {
         DELETE: (id) => `/roles/${id}` //make change in backend for id
         //CHECK and add update
     },
+    REPORT: {
+        SALES:'/reports/sales-summary',
+        PROFIT:'/reports/profit',
+        STOCK:'/reports/stock-movements'
+    },
     SALES:{ 
         CREATE:"/sales",
         ALL:"/sales",
@@ -54,6 +59,9 @@ export const ENDPOINTS = {
         CREATE:"/user",
         ALL:"/user",
         UPDATE: (id) =>`/user/${id}`, //patch
-        PATCH:(id) =>`/user/${id}`
+        PATCH:(id) =>`/user/${id}`,
+        MY_PERMISSIONS: "/me/permissions",
+        GRANT_PERMISSION: (id) => `/user/${id}/permission/grant`,
+        REVOKE_PERMISSION: (id) => `/user/${id}/permission/revoke`
     }
 }  

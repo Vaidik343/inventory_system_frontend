@@ -9,23 +9,33 @@ import {
   Paper,
   Chip,
   CircularProgress,
+  Box,
+  Alert,
 } from "@mui/material";
 
 import { useProduct } from "../../context/ProductContext";
 import { useCategory } from "../../context/CategoryContext";
 import { useSuppliers } from "../../context/SupplierContext";
+import { useAuth } from "../../context/AuthContext";
+import { resolvePermissions } from "../../utils/resolvePermissions";
 
 const ProductTable = () => {
   const { products, loading, getAllProducts } = useProduct();
   const { categories, getAllCategories } = useCategory();
   const { suppliers, getAllSuppliers } = useSuppliers();
+  const { userPermissions } = useAuth();
+
+  const perms = resolvePermissions(userPermissions);
+  const canViewProducts = perms.can("product", "view");
 
   //Load all data once
   useEffect(() => {
-    getAllProducts();
-    getAllCategories();
-    getAllSuppliers();
-  }, []);
+    if (canViewProducts) {
+      getAllProducts();
+      getAllCategories();
+      getAllSuppliers();
+    }
+  }, [canViewProducts]);
 
   // 🧠 Create lookup maps (O(1) access)
   const categoryMap = useMemo(() => {
@@ -44,7 +54,17 @@ const ProductTable = () => {
 
   if (loading) {
     return <CircularProgress />;
-  } 
+  }
+
+  if (!canViewProducts) {
+    return (
+      <Box p={3}>
+        <Alert severity="error">
+          You do not have permission to view products.
+        </Alert>
+      </Box>
+    );
+  }
 
   return (
     <TableContainer component={Paper}>

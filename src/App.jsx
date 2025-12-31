@@ -15,24 +15,26 @@ import Settings from "./pages/Settings";
 import User from "./pages/User";
 import Login from './components/Login'
 import ProtectedRoute from "./components/ProtectedRoute";
+import Report from "./pages/Report";
 function App() {
   return (
     <Routes>
       {/* Layout Route (Drawer always visible) */}
        <Route path="/login" element={<Login />} />
       <Route element={<Drawer />}>
-       {/* <Route element={<ProtectedRoute />}> */}
+       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
         <Route path="/category" element={<Categories />} />
         <Route path="/supplier" element={<Supplier />} />
         <Route path="/purchase" element={<Purchase />} />
+        <Route path="/reports" element={<Report />} />
         <Route path="/sales" element={<Sales />} />
         <Route path="/stock" element={<StockAdjustment />} />
         <Route path="/setting" element={<Settings />} />
         <Route path="/user" element={<User />} />
       </Route>
-      {/* </Route> */}
+      </Route>
     </Routes>
   );
 }

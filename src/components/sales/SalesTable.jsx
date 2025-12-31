@@ -20,6 +20,8 @@ import {
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useSales } from "../../context/SalesContext";
+import { useAuth } from "../../context/AuthContext";
+import { resolvePermissions } from "../../utils/resolvePermissions";
 
 const statusColor = (status) => {
   switch (status) {
@@ -49,17 +51,23 @@ const paymentColor = (status) => {
 
 const SalesTable = () => {
   const { sales, getAllSales, cancelSale, loading } = useSales();
+  const { userPermissions } = useAuth();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedSale, setSelectedSale] = useState(null);
   const [localSales, setLocalSales] = useState([]);
 
+  const perms = resolvePermissions(userPermissions);
+  const canViewSales = perms.can("sale", "view");
+
   useEffect(() => {
-    const fetchSales = async () => {
-      const data = await getAllSales();
-      setLocalSales(data || []);
-    };
-    fetchSales();
-  }, [getAllSales]);
+    if (canViewSales) {
+      const fetchSales = async () => {
+        const data = await getAllSales();
+        setLocalSales(data || []);
+      };
+      fetchSales();
+    }
+  }, [getAllSales, canViewSales]);
 
   const handleCancelClick = (sale) => {
     setSelectedSale(sale);
@@ -84,6 +92,16 @@ const SalesTable = () => {
   };
 
   if (loading) return <Typography>Loading sales...</Typography>;
+
+  if (!canViewSales) {
+    return (
+      <Box p={3}>
+        <Typography variant="h6" color="error">
+          You do not have permission to view sales.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
    <>

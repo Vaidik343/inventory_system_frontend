@@ -8,17 +8,36 @@ import {
   TableContainer,
   TableHead,
   Paper,
+  Box
 } from "@mui/material";
 import { useSuppliers } from "../../context/SupplierContext";
+import { useAuth } from "../../context/AuthContext";
+import { resolvePermissions } from "../../utils/resolvePermissions";
 
 const SupplierTable = () => {
   const { suppliers, getAllSuppliers, loading } = useSuppliers();
+  const { userPermissions } = useAuth();
+
+  const perms = resolvePermissions(userPermissions);
+  const canViewSuppliers = perms.can("supplier", "view");
 
   useEffect(() => {
-    getAllSuppliers();
-  }, [getAllSuppliers]);
+    if (canViewSuppliers) {
+      getAllSuppliers();
+    }
+  }, [canViewSuppliers]);
 
   if (loading) return <CircularProgress />;
+
+  if (!canViewSuppliers) {
+    return (
+      <Box p={3}>
+        <Typography variant="h6" color="error">
+          You do not have permission to view suppliers.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <TableContainer component={Paper}>

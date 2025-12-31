@@ -59,6 +59,56 @@ export const UsersProvider = ({ children }) => {
     }
   }, []);
 
+  // ✅ Grant permission to user
+  const grantPermission = useCallback(async (userId, resource, action) => {
+    try {
+      const { data } = await api.post(ENDPOINTS.USER.GRANT_PERMISSION(userId), {
+        resource,
+        action,
+      });
+      // Update the user in the local state to reflect the new permission
+      setUsers((prev) =>
+        prev.map((u) =>
+          u._id === userId
+            ? {
+                ...u,
+                extraPermissions: [...(u.extraPermissions || []), { resource, action }],
+              }
+            : u
+        )
+      );
+      return data;
+    } catch (error) {
+      console.error("Error granting permission:", error);
+      throw error;
+    }
+  }, []);
+
+  // ✅ Revoke permission from user
+  const revokePermission = useCallback(async (userId, resource, action) => {
+    try {
+      const { data } = await api.post(ENDPOINTS.USER.REVOKE_PERMISSION(userId), {
+        resource,
+        action,
+      });
+      // Update the user in the local state to reflect the revoked permission
+      setUsers((prev) =>
+        prev.map((u) =>
+          u._id === userId
+            ? {
+                ...u,
+                revokedPermissions: [...(u.revokedPermissions || []), { resource, action }],
+              }
+            : u
+        )
+      );
+      return data;
+    } catch (error) {
+      console.error("Error revoking permission:", error);
+      throw error;
+    }
+  }, []);
+
   // ✅ Memoized context value
   const value = useMemo(
     () => ({
@@ -68,8 +118,10 @@ export const UsersProvider = ({ children }) => {
       createUser,
       updateUser,
       deactivateUser,
+      grantPermission,
+      revokePermission,
     }),
-    [users, loading, getAllUsers, createUser, updateUser, deactivateUser]
+    [users, loading, getAllUsers, createUser, updateUser, deactivateUser, grantPermission, revokePermission]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

@@ -14,7 +14,7 @@ import { ProductProvider } from "./context/ProductContext";
 import { PurchaseProvider } from "./context/PurchaseContext";
 import { SalesProvider } from "./context/SalesContext";
 import { StockAdjustmentProvider } from "./context/StockAdjustmentContext";
-
+import { ReportProvider } from "./context/ReportContext.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Router>
@@ -28,7 +28,9 @@ createRoot(document.getElementById("root")).render(
                     <PurchaseProvider>
                       <SalesProvider>
                         <StockAdjustmentProvider>
+                        <ReportProvider>
                           <App />
+                          </ReportProvider>
                         </StockAdjustmentProvider>
                       </SalesProvider>
                     </PurchaseProvider>
