@@ -7,7 +7,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  Paper,
+  Paper,Typography ,
   Box
 } from "@mui/material";
 import { useSuppliers } from "../../context/SupplierContext";

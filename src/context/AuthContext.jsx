@@ -3,7 +3,7 @@ import { ENDPOINTS } from "../api/endpoints";
 import api from "../api/axiosInstance";
 import { jwtDecode } from "jwt-decode";
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 // add call back in every function
 

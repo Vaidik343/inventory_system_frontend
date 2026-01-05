@@ -49,12 +49,12 @@ const CategoryTable = () => {
 
   // Delete Category
   const handleDelete = async (id) => {
-    if (confirm("Are you sure you want to delete this category?")) return;
+    if (!confirm("Are you sure you want to delete this category?")) return;
     await deleteCategory(id);
   };
 
   if (loading) {
-    return <CircularProgress />;
+    return < CircularProgress />;
   }
 
   return (

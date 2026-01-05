@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useMemo } from
 import api from "../api/axiosInstance";
 import { ENDPOINTS } from "../api/endpoints";
 
-const SupplierContext = createContext(null);
+export const SupplierContext = createContext(null);
  
 export const SuppliersProvider = ({ children }) => {
   const [suppliers, setSuppliers] = useState([]);

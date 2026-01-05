@@ -3,7 +3,7 @@ import api from "../api/axiosInstance";
 import { ENDPOINTS } from "../api/endpoints";
 
 
-const ProductContext = createContext(null);
+export const ProductContext = createContext(null);
 
 export const ProductProvider = ({children}) => {
 

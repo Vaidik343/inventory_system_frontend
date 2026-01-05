@@ -95,7 +95,7 @@ export default function ResponsiveDrawer(props) {
 
   const drawer = (
     <div>
-      <Toolbar>
+      <Toolbar >
         <Typography variant="h6">Clinic Dashboard</Typography>
       </Toolbar>
       <Divider />
@@ -129,33 +129,7 @@ export default function ResponsiveDrawer(props) {
           ml: { sm: `${drawerWidth}px` },
         }}
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-            Inventory System
-          </Typography>
-
-          {/* 🔍 Search Bar */}
-          {/* <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search..."
-              inputProps={{ "aria-label": "search" }}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </Search> */}
-        </Toolbar>
+      
       </AppBar>
 
       {/* Sidebar Drawer */}
