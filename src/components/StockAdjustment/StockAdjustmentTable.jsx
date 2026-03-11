@@ -47,29 +47,81 @@ const StockTable = () => {
   }
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      sx={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(31, 38, 135, 0.1)',
+        overflow: 'hidden',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+        elevation: 0
+      }}
+    >
       <Table>
         <TableHead>
-          <TableRow>
-            <TableCell><strong>Product</strong></TableCell>
-            <TableCell><strong>Change</strong></TableCell>
-            <TableCell><strong>Reason</strong></TableCell>
-            <TableCell><strong>Reference</strong></TableCell>
-            <TableCell><strong>Changed By</strong></TableCell>
-            <TableCell><strong>Date</strong></TableCell>
+          <TableRow
+            sx={{
+              background: 'rgba(255, 255, 255, 0.05)',
+            }}
+          >
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Product</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Change</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Reason</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Reference</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Changed By</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Date</TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
           {stk.map((adj) => (
-            <TableRow key={adj._id} hover>
+            <TableRow
+              key={adj._id}
+              hover
+              sx={{
+                '&:hover': { background: 'rgba(255, 255, 255, 0.08)' },
+                transition: 'all 0.3s ease'
+              }}
+            >
               <TableCell>{getProductName(adj.productId)}</TableCell>
-              <TableCell>{adj.changes}</TableCell>
-              <TableCell>{adj.reason}</TableCell>
-              <TableCell>{adj.referenceId || "-"}</TableCell>
-              <TableCell>{getUserName(adj.changedBy)}</TableCell>
+
               <TableCell>
-                {new Date(adj.createdAt).toLocaleString()}
+                <Typography
+                  variant="body2"
+                  fontWeight={600}
+                  sx={{
+                    color:
+                      adj.changes > 0
+                        ? "success.main"
+                        : adj.changes < 0
+                          ? "error.main"
+                          : "text.primary",
+                  }}
+                >
+                  {adj.changes > 0 ? `+${adj.changes}` : adj.changes}
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant="body2" color="text.secondary">
+                  {adj.reason}
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                {adj.referenceId || "—"}
+              </TableCell>
+
+              <TableCell>
+                {getUserName(adj.changedBy)}
+              </TableCell>
+
+              <TableCell>
+                <Typography variant="body2" color="text.secondary">
+                  {new Date(adj.createdAt).toLocaleString()}
+                </Typography>
               </TableCell>
             </TableRow>
           ))}
@@ -77,6 +129,7 @@ const StockTable = () => {
       </Table>
     </TableContainer>
   );
+
 };
 
 export default StockTable;

@@ -16,6 +16,8 @@ import {
   Select,
   MenuItem,
   Switch,
+  Box,
+  Typography
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -91,24 +93,58 @@ const UserTable = () => {
 
   return (
     <>
-      <TableContainer>
+      <TableContainer
+        sx={{
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '16px',
+          boxShadow: '0 8px 32px rgba(31, 38, 135, 0.1)',
+          overflow: 'hidden',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          elevation: 0
+        }}
+      >
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Role</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Active</TableCell>
-              <TableCell>Last Login</TableCell>
-              <TableCell align="center">Actions</TableCell>
+            <TableRow
+              sx={{
+                background: 'rgba(255, 255, 255, 0.05)',
+              }}
+            >
+              <TableCell sx={{ fontWeight: 700, py: 2 }}>Role</TableCell>
+              <TableCell sx={{ fontWeight: 700, py: 2 }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: 700, py: 2 }}>Active</TableCell>
+              <TableCell sx={{ fontWeight: 700, py: 2 }}>Last Login</TableCell>
+              <TableCell align="center" sx={{ fontWeight: 700, py: 2 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user._id}>
+              <TableRow
+                key={user._id}
+                hover
+                sx={{
+                  '&:hover': { background: 'rgba(255, 255, 255, 0.08)' },
+                  transition: 'all 0.3s ease'
+                }}
+              >
                 <TableCell>{user.role?.name || user.role}</TableCell>
+
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.isActive ? "Yes" : "No"}</TableCell>
+
+                <TableCell>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 500,
+                      color: user.isActive ? "success.main" : "error.main",
+                    }}
+                  >
+                    {user.isActive ? "Active" : "Inactive"}
+                  </Typography>
+                </TableCell>
+
                 <TableCell>
                   {user.last_login
                     ? new Date(user.last_login).toLocaleString()
@@ -116,18 +152,34 @@ const UserTable = () => {
                 </TableCell>
 
                 <TableCell align="center">
-                  <IconButton onClick={() => handleEditOpen(user)}>
+                  <IconButton
+                    onClick={() => handleEditOpen(user)}
+                    sx={{
+                      "&:hover": { color: "primary.main" },
+                    }}
+                  >
                     <EditIcon />
                   </IconButton>
 
-                  <IconButton onClick={() => handlePermissionOpen(user)}>
+                  <IconButton
+                    onClick={() => handlePermissionOpen(user)}
+                    sx={{
+                      "&:hover": { color: "info.main" },
+                    }}
+                  >
                     <SecurityIcon />
                   </IconButton>
 
                   <IconButton
-                    color="error"
                     onClick={() => handleDeactivate(user._id)}
                     disabled={!user.isActive}
+                    sx={{
+                      color: "error.main",
+                      "&:hover": {
+                        bgcolor: "error.light",
+                        color: "#fff",
+                      },
+                    }}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -143,33 +195,49 @@ const UserTable = () => {
         <DialogTitle>Update User</DialogTitle>
 
         <DialogContent sx={{ mt: 1 }}>
-          <Select
-            fullWidth
-            value={selectedUser?.role?._id || selectedUser?.role || ""}
-            onChange={(e) =>
-              handleEditChange("role", e.target.value)
-            }
-          >
-            {roles.map((role) => (
-              <MenuItem key={role._id} value={role._id}>
-                {role.name}
-              </MenuItem>
-            ))}
-          </Select>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <Select
+              fullWidth
+              size="small"
+              value={selectedUser?.role?._id || selectedUser?.role || ""}
+              onChange={(e) =>
+                handleEditChange("role", e.target.value)
+              }
+            >
+              {roles.map((role) => (
+                <MenuItem key={role._id} value={role._id}>
+                  {role.name}
+                </MenuItem>
+              ))}
+            </Select>
 
-          <Switch
-            checked={selectedUser?.isActive || false}
-            onChange={(e) =>
-              handleEditChange("isActive", e.target.checked)
-            }
-          />
-          Active
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="body2">User Active</Typography>
+              <Switch
+                checked={selectedUser?.isActive || false}
+                onChange={(e) =>
+                  handleEditChange("isActive", e.target.checked)
+                }
+                color="success"
+              />
+            </Box>
+          </Box>
         </DialogContent>
 
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleUpdate}>
-            Update
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={() => setOpen(false)} color="inherit">
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleUpdate}
+            sx={{ borderRadius: 2 }}
+          >
+            Update User
           </Button>
         </DialogActions>
       </Dialog>
@@ -182,6 +250,7 @@ const UserTable = () => {
       />
     </>
   );
+
 };
 
 export default UserTable;

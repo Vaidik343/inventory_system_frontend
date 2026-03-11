@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { useSettings } from '../../context/SettingsContext'
 import {
-   Button, Paper, TableContainer, Grid,Box, TextField, Typography ,
-   Dialog,DialogTitle, DialogContent
-  }
- from '@mui/material';
+  Button, Paper, TableContainer, Grid, Box, TextField, Typography,
+  Dialog, DialogTitle, DialogContent
+}
+  from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 
 const settingForm = {
-     companyName:"",
-        invoice_prefix:"",
-        tax_rates:"",
-        currency:"",
-          address: {
+  companyName: "",
+  invoice_prefix: "",
+  tax_rates: "",
+  currency: "",
+  address: {
     street: "",
     city: "",
     country: "",
@@ -22,115 +22,134 @@ const settingForm = {
 
 const SettingForm = () => {
 
-    const {createSetting, loading } = useSettings();
-    const [open, setOpen] = useState(false);
-    const [form,setForm] = useState(settingForm);
+  const { createSetting, loading } = useSettings();
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState(settingForm);
 
-    const handleChange = async(e) => {
-        setForm({...form, [e.target.name]:e.target.value});
-    }
+  const handleChange = async (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
 
-    const handleAddressChange = (e) => {
-        const {name, value} = e.target;
-        setForm({...form, address: {
-            ...form.address,[name]:value,
-        }})
-    }
-    const handleSubmit = async() => {
-        try {
-        await createSetting(form);
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    setForm({
+      ...form, address: {
+        ...form.address, [name]: value,
+      }
+    })
+  }
+  const handleSubmit = async () => {
+    try {
+      await createSetting(form);
 
-        setOpen(false);
-        setForm(settingForm);            
-        } catch (error) {
-            console.log("error in submitting data!");
-        }
+      setOpen(false);
+      setForm(settingForm);
+    } catch (error) {
+      console.log("error in submitting data!");
     }
+  }
 
 
   return (
-    <Paper>
-        <Button
+    <Box mb={2}>
+      <Button
         variant="contained"
         startIcon={<AddIcon />}
         onClick={() => setOpen(true)}
+        sx={{
+          background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+          borderRadius: '12px',
+          py: 1.2,
+          px: 3,
+          fontWeight: 600,
+          textTransform: 'none',
+          fontSize: '15px',
+          color: 'white',
+          boxShadow: '0 4px 12px rgba(240, 147, 251, 0.3)',
+          '&:hover': {
+            background: 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)',
+            boxShadow: '0 6px 20px rgba(240, 147, 251, 0.4)',
+            transform: 'translateY(-2px)',
+          },
+          transition: 'all 0.3s ease',
+        }}
       >
-        Setting
+        Settings
       </Button>
-     <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
         <DialogTitle>Create setting</DialogTitle>
-        
-                <DialogContent>
-    <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-            <TextField
-              label="Company name"
-              name='companyName'
-              type='text'
-              value={form.companyName}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Invoice Prefix"
-              name='invoice_prefix'
-              type='text'
-              value={form.invoice_prefix}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Tax Rates"
-              name='tax_rates'
-              type='text'
-              value={form.tax_rates}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Currency"
-              name='currency'
-              type='text'
-              value={form.currency}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Street"
-              name='street'
-              type='text'
-              value={form.address.street}
-              onChange={handleAddressChange}
-            />
-            <TextField
-              label="City"
-              name='city'
-              type='text'
-              value={form.address.city}
-              onChange={handleAddressChange}
-            />
-            <TextField
-              label="Country"
-              name='country'
-              type='text'
-              value={form.address.country}
-              onChange={handleAddressChange}
-            />
-            <TextField
-              label="Pin code"
-              name='pin_code'
-              type='number'
-              value={form.address.pin_code}
-              onChange={handleAddressChange}
-            />
 
-        </Grid>
-    </Grid>
+        <DialogContent>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Company name"
+                name='companyName'
+                type='text'
+                value={form.companyName}
+                onChange={handleChange}
+              />
+              <TextField
+                label="Invoice Prefix"
+                name='invoice_prefix'
+                type='text'
+                value={form.invoice_prefix}
+                onChange={handleChange}
+              />
+              <TextField
+                label="Tax Rates"
+                name='tax_rates'
+                type='text'
+                value={form.tax_rates}
+                onChange={handleChange}
+              />
+              <TextField
+                label="Currency"
+                name='currency'
+                type='text'
+                value={form.currency}
+                onChange={handleChange}
+              />
+              <TextField
+                label="Street"
+                name='street'
+                type='text'
+                value={form.address.street}
+                onChange={handleAddressChange}
+              />
+              <TextField
+                label="City"
+                name='city'
+                type='text'
+                value={form.address.city}
+                onChange={handleAddressChange}
+              />
+              <TextField
+                label="Country"
+                name='country'
+                type='text'
+                value={form.address.country}
+                onChange={handleAddressChange}
+              />
+              <TextField
+                label="Pin code"
+                name='pin_code'
+                type='number'
+                value={form.address.pin_code}
+                onChange={handleAddressChange}
+              />
 
-    <Box mt={3}>
-        <Button variant='contained' onClick={handleSubmit} disabled={loading}>
-            {loading ? "Saving..." : "Save Settings"}
-        </Button>
+            </Grid>
+          </Grid>
+
+          <Box mt={3}>
+            <Button variant='contained' onClick={handleSubmit} disabled={loading}>
+              {loading ? "Saving..." : "Save Settings"}
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </Box>
-</DialogContent>
-</Dialog>
-    </Paper>
   )
 }
 

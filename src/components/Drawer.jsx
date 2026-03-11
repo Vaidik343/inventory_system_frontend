@@ -14,24 +14,34 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import PaymentIcon from "@mui/icons-material/Payment";
-import PeopleIcon from "@mui/icons-material/People";
-import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import CategoryIcon from "@mui/icons-material/Category";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
+import TuneIcon from "@mui/icons-material/Tune";
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PeopleIcon from '@mui/icons-material/People';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import { alpha, styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import BackupIcon from '@mui/icons-material/Backup';  
-const drawerWidth = 240;
+import Badge from "@mui/material/Badge";
+
+const drawerWidth = 260;
+
+//#e6e6fb all over bg
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  borderRadius: '12px',
+  backgroundColor: alpha(theme.palette.common.black, 0.04),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.common.black, 0.08),
   },
   marginLeft: theme.spacing(2),
   width: "auto",
@@ -65,7 +75,6 @@ export default function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const location = useLocation();
-  // const { searchQuery, setSearchQuery } = useSearch();
 
   const handleDrawerToggle = () => {
     if (!isClosing) setMobileOpen(!mobileOpen);
@@ -79,18 +88,17 @@ export default function ResponsiveDrawer(props) {
   const handleDrawerTransitionEnd = () => setIsClosing(false);
 
   const menuItems = [
-    { text: "Dashboard", icon: <AssignmentIcon />, path: "/" },
-    { text: "Products", icon: <PaymentIcon />, path: "/products" },
-    { text: "Categories", icon: <PeopleIcon />, path: "/category" },
-    { text: "Supplier", icon: <AssignmentIndIcon />, path: "/supplier" },
-    { text: "Purchases", icon: <MedicalServicesIcon />, path: "/purchase" },
-    { text: "Reports", icon: <MedicalServicesIcon />, path: "/reports" },
- 
-    { text: "Sales", icon: <AssessmentIcon />, path: "/sales" },
-    { text: "Stock Adjustment", icon: <BackupIcon />, path: "/stock" },
-   
-    { text: "Settings", icon: <BackupIcon />, path: "/setting" },
-    { text: "User", icon: <BackupIcon />, path: "/user" },
+    { text: "Dashboard", icon: <DashboardIcon />, path: "/" },
+    { text: "Analytics", icon: <BarChartIcon />, path: "/analytics" },
+    { text: "Products", icon: <InventoryIcon />, path: "/products" },
+    { text: "Categories", icon: <CategoryIcon />, path: "/category" },
+    { text: "Supplier", icon: <LocalShippingIcon />, path: "/supplier" },
+    { text: "Purchases", icon: <ShoppingCartIcon />, path: "/purchase" },
+    { text: "Sales", icon: <PointOfSaleIcon />, path: "/sales" },
+    { text: "Stock Adjustment", icon: <TuneIcon />, path: "/stock" },
+    { text: "Reports", icon: <AssessmentIcon />, path: "/reports" },
+    { text: "Settings", icon: <SettingsIcon />, path: "/setting" },
+    { text: "Users", icon: <PeopleIcon />, path: "/user" },
   ];
 
   const drawer = (
@@ -119,54 +127,165 @@ export default function ResponsiveDrawer(props) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
-      {/* Top Bar */}
+
+      {/* ================= TOP BAR ================= */}
       <AppBar
         position="fixed"
+        elevation={0}
         sx={{
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%)',
+          backdropFilter: 'blur(10px)',
+          borderBottom: "1px solid",
+          borderColor: "divider",
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
         }}
       >
-      
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box display="flex" alignItems="center" gap={2}>
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ display: { sm: "none" }, color: 'text.primary' }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Typography
+              fontWeight={700}
+              fontSize={18}
+              sx={{
+                color: '#6366f1',
+              }}
+            >
+              Inventory Management System
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {/* Search */}
+            <Search sx={{ display: { xs: 'none', md: 'block' } }}>
+              <SearchIconWrapper>
+                <SearchIcon sx={{ color: 'text.secondary' }} />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                sx={{ color: 'text.primary' }}
+              />
+            </Search>
+
+            {/* Notifications */}
+            <IconButton
+              component={Link}
+              to="/notifications"
+              sx={{
+                color: 'text.primary',
+                '&:hover': { background: 'rgba(99, 102, 241, 0.1)' }
+              }}
+            >
+              <Badge badgeContent={3} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+
+            {/* Profile */}
+            <IconButton
+              component={Link}
+              to="/profile"
+              sx={{
+                color: 'text.primary',
+                '&:hover': { background: 'rgba(99, 102, 241, 0.1)' }
+              }}
+            >
+              <AccountCircleIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
       </AppBar>
 
-      {/* Sidebar Drawer */}
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+      {/* ================= SIDEBAR ================= */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          display: { xs: "none", sm: "block" },
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+            // background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.98) 100%)',
+            background: '#6366f1',
+            backdropFilter: 'blur(10px)',
+            borderRight: "1px solid rgba(102, 126, 234, 0.1)",
+          },
+        }}
       >
-        {/* Mobile Drawer */}
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
+        <Toolbar sx={{ justifyContent: 'center', py: 2 }}>
+          <Typography
+            fontWeight={800}
+            fontSize={20}
+            sx={{
+              color: '#6366f1',
+            }}
+          >
+            📦 Inventory Pro
+          </Typography>
+        </Toolbar>
 
-        {/* Permanent Drawer */}
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
+        <Divider sx={{ borderColor: 'rgba(102, 126, 234, 0.1)' }} />
 
-      {/* Main Content */}
+        <List sx={{ px: 1, py: 2 }}>
+          {menuItems.map((item) => {
+            const active = location.pathname === item.path;
+
+            return (
+              <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
+                <ListItemButton
+                  component={Link}
+                  to={item.path}
+                  sx={{
+                    borderRadius: 2,
+                    mx: 1,
+                    background: active
+                      ? '#6366f1'
+                      : 'transparent',
+                    color: active ? 'white' : 'inherit',
+                    transition: 'all 0.3s ease',
+                    "&:hover": {
+                      background: active
+                        ? '#4f46e5'
+                        : 'rgba(99, 102, 241, 0.08)',
+                      transform: 'translateX(4px)',
+                    },
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      color: active ? 'white' : 'text.secondary',
+                      minWidth: 36,
+                    }}
+                  >
+                    {item.icon}
+                  </ListItemIcon>
+
+                  <ListItemText
+                    primary={item.text}
+                    primaryTypographyProps={{
+                      fontSize: 14,
+                      fontWeight: active ? 700 : 500,
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Drawer>
+
+      {/* ================= MAIN CONTENT ================= */}
       <Box
         component="main"
         sx={{
@@ -176,8 +295,9 @@ export default function ResponsiveDrawer(props) {
         }}
       >
         <Toolbar />
-        <Outlet /> {/* This renders the active route’s page */}
+        <Outlet />
       </Box>
     </Box>
   );
+
 }

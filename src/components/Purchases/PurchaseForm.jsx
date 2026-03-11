@@ -101,164 +101,180 @@ const PurchaseForm = () => {
   };
 
   return (
-    <Paper sx={{ p: 3 }}>
-
+    <Box mb={2}>
       <Button
         variant="contained"
         startIcon={<AddIcon />}
         onClick={() => setOpen(true)}
+        sx={{
+          background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+          borderRadius: '12px',
+          py: 1.2,
+          px: 3,
+          fontWeight: 600,
+          textTransform: 'none',
+          fontSize: '15px',
+          color: 'white',
+          boxShadow: '0 4px 12px rgba(240, 147, 251, 0.3)',
+          '&:hover': {
+            background: 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)',
+            boxShadow: '0 6px 20px rgba(240, 147, 251, 0.4)',
+            transform: 'translateY(-2px)',
+          },
+          transition: 'all 0.3s ease',
+        }}
       >
         Add Purchase
       </Button>
-      
+
 
       {/* Supplier */}
-      
+
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="md">
-       
+
         <DialogContent>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <TextField
-            select
-            label="Supplier"
-            fullWidth
-            value={form.supplierId}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, supplierId: e.target.value }))
-            }
-          >
-            {suppliers.map((s) => (
-              <MenuItem key={s._id} value={s._id}>
-                {s.name}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                select
+                label="Supplier"
+                fullWidth
+                value={form.supplierId}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, supplierId: e.target.value }))
+                }
+              >
+                {suppliers.map((s) => (
+                  <MenuItem key={s._id} value={s._id}>
+                    {s.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
 
-        <Grid item xs={12} md={3}>
-          <TextField
-            label="Tax"
-            type="number"
-            fullWidth
-            value={form.tax}
-            onChange={(e) =>
-              setForm((prev) => ({ ...prev, tax: e.target.value }))
-            }
-          />
-        </Grid>
+            <Grid item xs={12} md={3}>
+              <TextField
+                label="Tax"
+                type="number"
+                fullWidth
+                value={form.tax}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, tax: e.target.value }))
+                }
+              />
+            </Grid>
 
-        <Grid item xs={12} md={3}>
-          <TextField
-            label="Invoice Path"
-            fullWidth
-            value={form.invoice_file_path}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                invoice_file_path: e.target.value,
-              }))
-            }
-          />
-        </Grid>
-      </Grid>
-
-      <Divider sx={{ my: 3 }} />
-
-      {/* Items */}
-      <Typography variant="subtitle1">Purchase Items</Typography>
-
-      {form.items.map((item, index) => (
-        <Grid container spacing={2} key={index} mt={1} alignItems="center">
-          <Grid item xs={12} md={3}>
-            <TextField
-              select
-              label="Product"
-              fullWidth
-              value={item.productId}
-              onChange={(e) =>
-                handleItemChange(index, "productId", e.target.value)
-              }
-            >
-              {products.map((p) => (
-                <MenuItem key={p._id} value={p._id}>
-                  {p.name}
-                </MenuItem>
-              ))}
-            </TextField>
+            <Grid item xs={12} md={3}>
+              <TextField
+                label="Invoice Path"
+                fullWidth
+                value={form.invoice_file_path}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    invoice_file_path: e.target.value,
+                  }))
+                }
+              />
+            </Grid>
           </Grid>
 
-          <Grid item xs={6} md={2}>
-            <TextField
-              label="Qty"
-              type="number"
-              fullWidth
-              value={item.qty}
-              onChange={(e) =>
-                handleItemChange(index, "qty", e.target.value)
-              }
-            />
-          </Grid>
+          <Divider sx={{ my: 3 }} />
 
-          <Grid item xs={6} md={2}>
-            <TextField
-              label="Cost Price"
-              type="number"
-              fullWidth
-              value={item.cost_price}
-              onChange={(e) =>
-                handleItemChange(index, "cost_price", e.target.value)
-              }
-            />
-          </Grid>
+          {/* Items */}
+          <Typography variant="subtitle1">Purchase Items</Typography>
 
-          <Grid item xs={6} md={2}>
-            <TextField
-              label="Batch No"
-              fullWidth
-              value={item.batch_No}
-              onChange={(e) =>
-                handleItemChange(index, "batch_No", e.target.value)
-              }
-            />
-          </Grid>
+          {form.items.map((item, index) => (
+            <Grid container spacing={2} key={index} mt={1} alignItems="center">
+              <Grid item xs={12} md={3}>
+                <TextField
+                  select
+                  label="Product"
+                  fullWidth
+                  value={item.productId}
+                  onChange={(e) =>
+                    handleItemChange(index, "productId", e.target.value)
+                  }
+                >
+                  {products.map((p) => (
+                    <MenuItem key={p._id} value={p._id}>
+                      {p.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
 
-          <Grid item xs={6} md={2}>
-            <TextField
-              type="date"
-              label="Expiry"
-              InputLabelProps={{ shrink: true }}
-              fullWidth
-              value={item.expiry}
-              onChange={(e) =>
-                handleItemChange(index, "expiry", e.target.value)
-              }
-            />
-          </Grid>
+              <Grid item xs={6} md={2}>
+                <TextField
+                  label="Qty"
+                  type="number"
+                  fullWidth
+                  value={item.qty}
+                  onChange={(e) =>
+                    handleItemChange(index, "qty", e.target.value)
+                  }
+                />
+              </Grid>
 
-          <Grid item xs={12} md={1}>
-            <IconButton onClick={() => removeItem(index)} color="error">
-              <DeleteIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
+              <Grid item xs={6} md={2}>
+                <TextField
+                  label="Cost Price"
+                  type="number"
+                  fullWidth
+                  value={item.cost_price}
+                  onChange={(e) =>
+                    handleItemChange(index, "cost_price", e.target.value)
+                  }
+                />
+              </Grid>
 
-      <Button startIcon={<AddIcon />} onClick={addItem} sx={{ mt: 2 }}>
-        Add Item
-      </Button>
+              <Grid item xs={6} md={2}>
+                <TextField
+                  label="Batch No"
+                  fullWidth
+                  value={item.batch_No}
+                  onChange={(e) =>
+                    handleItemChange(index, "batch_No", e.target.value)
+                  }
+                />
+              </Grid>
 
-      <Divider sx={{ my: 3 }} />
+              <Grid item xs={6} md={2}>
+                <TextField
+                  type="date"
+                  label="Expiry"
+                  InputLabelProps={{ shrink: true }}
+                  fullWidth
+                  value={item.expiry}
+                  onChange={(e) =>
+                    handleItemChange(index, "expiry", e.target.value)
+                  }
+                />
+              </Grid>
 
-      <Typography>Sub Total: ₹{subTotal}</Typography>
-      <Typography>Total: ₹{total}</Typography>
+              <Grid item xs={12} md={1}>
+                <IconButton onClick={() => removeItem(index)} color="error">
+                  <DeleteIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          ))}
 
-      <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
-        Save Purchase
-      </Button>
-          </DialogContent>
+          <Button startIcon={<AddIcon />} onClick={addItem} sx={{ mt: 2 }}>
+            Add Item
+          </Button>
+
+          <Divider sx={{ my: 3 }} />
+
+          <Typography>Sub Total: ₹{subTotal}</Typography>
+          <Typography>Total: ₹{total}</Typography>
+
+          <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
+            Save Purchase
+          </Button>
+        </DialogContent>
       </Dialog>
-    </Paper>
+    </Box>
   );
 };
 

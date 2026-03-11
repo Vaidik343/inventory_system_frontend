@@ -59,19 +59,35 @@ const CategoryTable = () => {
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '16px',
+          boxShadow: '0 8px 32px rgba(31, 38, 135, 0.1)',
+          overflow: 'hidden',
+          border: '1px solid rgba(255, 255, 255, 0.3)'
+        }}
+      >
         <Table size="small">
           <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
+            <TableRow sx={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+              <TableCell sx={{ fontWeight: 700, py: 2 }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: 700, py: 2 }}>Status</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 700, py: 2 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {categories.map((category) => (
-              <TableRow key={category._id}>
+              <TableRow
+                key={category._id}
+                sx={{
+                  '&:hover': { background: 'rgba(255, 255, 255, 0.08)' },
+                  transition: 'all 0.3s ease'
+                }}
+              >
                 <TableCell>{category.name}</TableCell>
 
                 <TableCell>

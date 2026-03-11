@@ -82,7 +82,7 @@ const refreshToken = async () => {
       ENDPOINTS.AUTH.REFRESH_TOKEN,
       { withCredentials: true }
     );
-    console.log("🚀 ~ refreshToken ~ data:", data)
+    // console.log("🚀 ~ refreshToken ~ data:", data)
 
     const { accessToken } = data;
 

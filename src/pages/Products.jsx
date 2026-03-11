@@ -2,17 +2,26 @@ import React from 'react'
 import ProductTable from '../components/products/ProductTable'
 import ProductForm from '../components/products/ProductForm'
 import { Box } from '@mui/material'
+import PageHeader from '../components/PageHeader'
+import InventoryIcon from '@mui/icons-material/Inventory'
 
 const Products = () => {
   return (
-    <div>
- <Box display="flex" justifyContent="flex-end" mb={2}>
-  <ProductForm />
-</Box>
+    <Box>
+      <PageHeader
+        icon={InventoryIcon}
+        title="Products Management"
+        subtitle="Manage your product inventory, pricing, and stock levels"
+      />
 
+      {/* Action Bar */}
+      <Box display="flex" justifyContent="flex-end" mb={3}>
+        <ProductForm />
+      </Box>
 
-        <ProductTable />
-    </div>
+      {/* Products Table */}
+      <ProductTable />
+    </Box>
   )
 }
 

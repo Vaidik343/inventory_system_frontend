@@ -1,4 +1,4 @@
-    import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ const initialForm = {
   name: "",
   contact_person: "",
   phone: "",
-  email:"",
+  email: "",
   payment_term: "",
   note: "",
   address: {
@@ -55,7 +55,7 @@ const SupplierForm = () => {
 
   const handleSubmit = async () => {
     try {
-        
+
       await createSupplier(form);
       setForm(initialForm);
       setOpen(false);
@@ -65,146 +65,178 @@ const SupplierForm = () => {
   };
 
   return (
-    <Paper sx={{ p: 3, mb: 3 }}>
-       <Button
+    <Box mb={2}>
+      <Button
         variant="contained"
         startIcon={<AddIcon />}
         onClick={() => setOpen(true)}
+        sx={{
+          backgroundColor: '#ec4899',
+          borderRadius: '12px',
+          py: 1.2,
+          px: 3,
+          fontWeight: 600,
+          textTransform: 'none',
+          fontSize: '15px',
+          color: 'white',
+          boxShadow: '0 4px 12px rgba(240, 147, 251, 0.3)',
+          '&:hover': {
+            backgroundColor: '#db2777',
+            boxShadow: '0 6px 20px rgba(240, 147, 251, 0.4)',
+            transform: 'translateY(-2px)',
+          },
+          transition: 'all 0.3s ease',
+        }}
       >
         Add Supplier
       </Button>
-       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
-      <Typography variant="h6" gutterBottom>
-        Create Supplier
-      </Typography>
- <DialogContent>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="Supplier Name"
-            name="name"
-            fullWidth
-            required
-            value={form.name}
-            onChange={handleChange}
-          />
-        </Grid>
 
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="Contact Person"
-            name="contact_person"
-            fullWidth
-            required
-            value={form.contact_person}
-            onChange={handleChange}
-          />
-        </Grid>
+      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+        <Box px={3} pt={3}>
+          <Typography variant="h6" fontWeight={600}>
+            Create Supplier
+          </Typography>
+        </Box>
 
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="Phone"
-            name="phone"
-            fullWidth
-            required
-            value={form.phone}
-            onChange={handleChange}
-          />
-        </Grid>
+        <DialogContent sx={{ pt: 2 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Supplier Name"
+                name="name"
+                fullWidth
+                required
+                value={form.name}
+                onChange={handleChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="Email"
-            name="email"
-            fullWidth
-            required
-            value={form.email}
-            onChange={handleChange}
-          />
-        </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Contact Person"
+                name="contact_person"
+                fullWidth
+                required
+                value={form.contact_person}
+                onChange={handleChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="Payment Term"
-            name="payment_term"
-            fullWidth
-            required
-            value={form.payment_term}
-            onChange={handleChange}
-          />
-        </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Phone"
+                name="phone"
+                fullWidth
+                required
+                value={form.phone}
+                onChange={handleChange}
+              />
+            </Grid>
 
-        <Grid item xs={12}>
-          <TextField
-            label="Note"
-            name="note"
-            fullWidth
-            required
-            value={form.note}
-            onChange={handleChange}
-          />
-        </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Email"
+                name="email"
+                fullWidth
+                required
+                value={form.email}
+                onChange={handleChange}
+              />
+            </Grid>
 
-        {/* Address */}
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="Street"
-            name="address.street"
-            fullWidth
-            required
-            value={form.address.street}
-            onChange={handleChange}
-          />
-        </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Payment Term"
+                name="payment_term"
+                fullWidth
+                required
+                value={form.payment_term}
+                onChange={handleChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="City"
-            name="address.city"
-            fullWidth
-            required
-            value={form.address.city}
-            onChange={handleChange}
-          />
-        </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Note"
+                name="note"
+                fullWidth
+                multiline
+                minRows={2}
+                value={form.note}
+                onChange={handleChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="Country"
-            name="address.country"
-            fullWidth
-            required
-            value={form.address.country}
-            onChange={handleChange}
-          />
-        </Grid>
+            {/* Address */}
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Street"
+                name="address.street"
+                fullWidth
+                required
+                value={form.address.street}
+                onChange={handleChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={6}>
-          <TextField
-            label="Pin Code"
-            name="address.pin_code"
-            fullWidth
-            required
-            value={form.address.pin_code}
-            onChange={handleChange}
-          />
-        </Grid>
-      </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="City"
+                name="address.city"
+                fullWidth
+                required
+                value={form.address.city}
+                onChange={handleChange}
+              />
+            </Grid>
 
-      <Box mt={3}>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? "Saving..." : "Save Supplier"}
-        </Button>
-      </Box>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Country"
+                name="address.country"
+                fullWidth
+                required
+                value={form.address.country}
+                onChange={handleChange}
+              />
+            </Grid>
 
-      </DialogContent>
+            <Grid item xs={12} md={6}>
+              <TextField
+                label="Pin Code"
+                name="address.pin_code"
+                fullWidth
+                required
+                value={form.address.pin_code}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
+
+          <Box
+            mt={4}
+            display="flex"
+            justifyContent="flex-end"
+            gap={2}
+          >
+            <Button onClick={() => setOpen(false)} color="inherit">
+              Cancel
+            </Button>
+
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              disabled={loading}
+              sx={{ borderRadius: 2 }}
+            >
+              {loading ? "Saving..." : "Save Supplier"}
+            </Button>
+          </Box>
+        </DialogContent>
       </Dialog>
-    </Paper>
+    </Box>
   );
+
 };
 
 export default SupplierForm;

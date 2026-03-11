@@ -41,65 +41,103 @@ const ProductSummaryCard = () => {
 
   if(loading) return <CircularProgress />
   return (
-    <Grid container spacing={2}>
-
-      {/* Total product */}
-      <Grid item xs={12} sm={6} md={5}>
-        <Card  sx={styleCard}>
-          <CardContent>
-            <Typography variant='subtitle2' color='text.secondary'>
-              Total Product 
-            </Typography>
-            <Typography variant='h5'>
-              {summary.totalProduct}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      {/* Total cost */}
-      <Grid item xs={12} sm={6} md={3} >
-        <Card sx={styleCard}>
-          <CardContent>
-            <Typography variant='subtitle2' color='text.secondary'>
-              Total Cost 
-              <Typography variant='h5'>
-                {summary.totalCost}
-
-              </Typography>
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      {/* Total sell */}
-      <Grid item xs={12} sm={6} md={3}>
-        <Card sx={styleCard}>
-          <CardContent>
-            <Typography variant='subtitle2' color='text.secondary'>
-              Total Sell 
-            </Typography>
-            <Typography variant='h5'>
-              {summary.totalSell}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      {/* Total Stock */}
-      <Grid item xs={12} sm={6} md={3}>
-        <Card sx={styleCard}>
-          <CardContent>
-            <Typography variant='subtitle2' color='text.secondary'>Total Stock</Typography>
-            <Typography>
-              {summary.totalStock}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-
+  <Grid container spacing={3}>
+    {/* TOTAL PRODUCTS */}
+    <Grid item xs={12} sm={6} md={3}>
+      <Card
+        sx={{
+          borderRadius: 3,
+          boxShadow: "0 10px 30px rgba(0,0,0,0.06)",
+          transition: "all .25s ease",
+          "&:hover": {
+            transform: "translateY(-4px)",
+            boxShadow: "0 16px 40px rgba(0,0,0,0.12)",
+          },
+        }}
+      >
+        <CardContent>
+          <Typography variant="overline" color="text.secondary">
+            Total Products
+          </Typography>
+          <Typography variant="h4" fontWeight={700}>
+            {summary.totalProduct}
+          </Typography>
+        </CardContent>
+      </Card>
     </Grid>
-  )
+
+    {/* TOTAL COST */}
+<Grid item xs={12} sm={6} md={3}>
+  <Card
+    sx={{
+      borderRadius: 3,
+      background: "linear-gradient(135deg, #26a69a 0%, #80cbc4 100%)", // teal gradient
+      color: "white",
+      boxShadow: "0 10px 30px rgba(38,166,154,0.35)",
+      transition: "all .25s ease",
+      "&:hover": {
+        transform: "translateY(-3px)",
+        boxShadow: "0 16px 40px rgba(38,166,154,0.4)",
+      },
+    }}
+  >
+    <CardContent>
+      <Typography variant="overline" sx={{ opacity: 0.85 }}>
+        Inventory Cost
+      </Typography>
+      <Typography variant="h5" fontWeight={700}>
+        ₹{summary.totalCost.toLocaleString()}
+      </Typography>
+    </CardContent>
+  </Card>
+</Grid>
+
+
+    {/* TOTAL SELL */}
+    <Grid item xs={12} sm={6} md={3}>
+      <Card
+        sx={{
+          borderRadius: 3,
+          background:
+            "linear-gradient(135deg, #4caf50 0%, #81c784 100%)",
+          color: "white",
+          boxShadow: "0 10px 30px rgba(76,175,80,0.35)",
+        }}
+      >
+        <CardContent>
+          <Typography variant="overline" sx={{ opacity: 0.85 }}>
+            Potential Revenue
+          </Typography>
+          <Typography variant="h5" fontWeight={700}>
+            ₹{summary.totalSell.toLocaleString()}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+
+    {/* TOTAL STOCK */}
+    <Grid item xs={12} sm={6} md={3}>
+      <Card
+        sx={{
+          borderRadius: 3,
+          bgcolor: "background.paper",
+          border: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        <CardContent>
+          <Typography variant="overline" color="text.secondary">
+            Total Stock
+          </Typography>
+          <Typography variant="h5" fontWeight={700}>
+            {summary.totalStock}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+  </Grid>
+);
+
 }
 
 export default ProductSummaryCard

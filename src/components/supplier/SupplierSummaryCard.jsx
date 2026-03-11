@@ -26,31 +26,35 @@ const SupplierSummaryCard = () => {
 
 
   return (
-    <Grid container spacing={2}>
-        <Grid item md={2}>
-            <Card
-  sx={{
-    minHeight: '10dvh',
-    borderRadius: 4,
-    // boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-    p: 1,
-  }}
->
-
-                <CardContent>
-                    <Typography>
-                        Total Supplier
-                    </Typography>
-                    <Typography>
-                            {summary.totalSupplier}
-                        </Typography>
-                </CardContent>
-            </Card>
-
-        </Grid>
-
+  <Grid container spacing={3}>
+    {/* TOTAL SUPPLIERS */}
+    <Grid item xs={12} sm={6} md={3}>
+      <Card
+        sx={{
+          borderRadius: 3,
+          background: "linear-gradient(135deg, #2196f3 0%, #64b5f6 100%)",
+          color: "white",
+          boxShadow: "0 10px 30px rgba(33,150,243,0.3)",
+          transition: "all .25s ease",
+          "&:hover": {
+            transform: "translateY(-4px)",
+            boxShadow: "0 16px 40px rgba(33,150,243,0.4)",
+          },
+        }}
+      >
+        <CardContent>
+          <Typography variant="overline" sx={{ opacity: 0.85 }}>
+            Total Suppliers
+          </Typography>
+          <Typography variant="h4" fontWeight={700}>
+            {summary.totalSupplier}
+          </Typography>
+        </CardContent>
+      </Card>
     </Grid>
-  )
+  </Grid>
+);
+
 }
 
 export default SupplierSummaryCard

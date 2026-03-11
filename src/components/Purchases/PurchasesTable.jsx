@@ -54,23 +54,41 @@ const PurchaseTable = () => {
   }
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      sx={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '16px',
+        boxShadow: '0 8px 32px rgba(31, 38, 135, 0.1)',
+        overflow: 'hidden',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+        elevation: 0
+      }}
+    >
       <Table>
         <TableHead>
-          <TableRow>
-            <TableCell><strong>Invoice Date</strong></TableCell>
-            <TableCell><strong>Supplier</strong></TableCell>
-            <TableCell><strong>Products</strong></TableCell>
-            <TableCell><strong>Sub Total</strong></TableCell>
-            <TableCell><strong>Tax</strong></TableCell>
-            <TableCell><strong>Total</strong></TableCell>
-            <TableCell><strong>Status</strong></TableCell>
+          <TableRow sx={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Invoice Date</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Supplier</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Products</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Sub Total</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Tax</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Total</TableCell>
+            <TableCell sx={{ fontWeight: 700, py: 2 }}>Status</TableCell>
           </TableRow>
         </TableHead>
 
         <TableBody>
           {purchases.map((purchase) => (
-            <TableRow key={purchase._id} hover>
+            <TableRow
+              key={purchase._id}
+              hover
+              sx={{
+                '&:hover': { background: 'rgba(255, 255, 255, 0.08)' },
+                transition: 'all 0.3s ease'
+              }}
+            >
               <TableCell>
                 {new Date(purchase.createdAt).toLocaleDateString()}
               </TableCell>
