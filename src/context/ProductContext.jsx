@@ -14,10 +14,11 @@ export const ProductProvider = ({children}) => {
     const createProducts = useCallback(async (payload) => {
         try {
             const {data} = await api.post(ENDPOINTS.PRODUCTS.CREATE,payload);
+               console.log("🚀 ~ ProductProvider ~ data:", data)
                setProducts((prev) =>[...prev , data]);
                return data;
         } catch (error) {
-            console.log("Error while creating product",error);
+             console.log("Error while creating product", error.response?.data);
             throw error;
         }
     }, []);

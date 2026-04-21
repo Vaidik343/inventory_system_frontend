@@ -89,25 +89,27 @@ const PurchaseTable = () => {
                 transition: 'all 0.3s ease'
               }}
             >
-              <TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>
                 {new Date(purchase.createdAt).toLocaleDateString()}
               </TableCell>
 
-              <TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>
                 {purchase.supplierId?.name || "—"}
               </TableCell>
 
               <TableCell>
-                {purchase.purchase_items.length === 0 ? (
-                  <Typography variant="body2" color="text.secondary">
+                {purchase.purchase_items?.length ? (
+                  <Typography variant="body2" color="#312e81">
                     No items
                   </Typography>
                 ) : (
                   <Box>
-                    {purchase.purchase_items.map((item) => (
+                    {purchase.purchase_items?.map((item) => (
                       <Typography
                         key={item._id}
                         variant="body2"
+                        color="#312e81"
+                      // sx={{color:"#312e81 !important"}}
                       >
                         • {item.productId?.name} ({item.qty} × {item.cost_price})
                       </Typography>
@@ -116,10 +118,10 @@ const PurchaseTable = () => {
                 )}
               </TableCell>
 
-              <TableCell>₹{purchase.sub_total}</TableCell>
-              <TableCell>₹{purchase.tax}</TableCell>
-              <TableCell>
-                <strong>₹{purchase.total}</strong>
+              <TableCell  sx={{color:"#312e81 !important"}}>₹{purchase.sub_total}</TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>₹{purchase.tax}</TableCell>
+              <TableCell  sx={{color:"#312e81 !important"}}>
+                <strong >₹{purchase.total}</strong>
               </TableCell>
 
               <TableCell>

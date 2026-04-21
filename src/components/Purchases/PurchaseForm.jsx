@@ -134,7 +134,7 @@ const PurchaseForm = () => {
 
         <DialogContent>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+            <Grid item  md={8}>
               <TextField
                 select
                 label="Supplier"
@@ -152,7 +152,7 @@ const PurchaseForm = () => {
               </TextField>
             </Grid>
 
-            <Grid item xs={12} md={3}>
+            <Grid item  md={8}>
               <TextField
                 label="Tax"
                 type="number"

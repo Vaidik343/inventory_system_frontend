@@ -88,7 +88,7 @@ const CategoryTable = () => {
                   transition: 'all 0.3s ease'
                 }}
               >
-                <TableCell>{category.name}</TableCell>
+                <TableCell sx={{color:"#312e81 !important"}}>{category.name}</TableCell>
 
                 <TableCell>
                   <Chip

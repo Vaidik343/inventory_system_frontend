@@ -28,6 +28,7 @@ export const SuppliersProvider = ({ children }) => {
   const createSupplier = useCallback(async (payload) => {
     try {
       const { data } = await api.post(ENDPOINTS.SUPPLIER.CREATE, payload);
+      console.log("🚀 ~ SuppliersProvider ~ data:", data)
       setSuppliers((prev) => [...prev, data]);
       return data;
     } catch (error) {

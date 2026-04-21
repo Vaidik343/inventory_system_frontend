@@ -129,9 +129,9 @@ const UserTable = () => {
                   transition: 'all 0.3s ease'
                 }}
               >
-                <TableCell>{user.role?.name || user.role}</TableCell>
+                <TableCell sx={{color:"#312e81 !important"}}>{user.role?.name || user.role}</TableCell>
 
-                <TableCell>{user.email}</TableCell>
+                <TableCell sx={{color:"#312e81 !important"}}>{user.email}</TableCell>
 
                 <TableCell>
                   <Typography
@@ -145,7 +145,7 @@ const UserTable = () => {
                   </Typography>
                 </TableCell>
 
-                <TableCell>
+                <TableCell sx={{color:"#312e81 !important"}}>
                   {user.last_login
                     ? new Date(user.last_login).toLocaleString()
                     : "-"}

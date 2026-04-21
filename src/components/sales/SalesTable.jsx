@@ -146,21 +146,21 @@ const SalesTable = () => {
                         transition: 'all 0.3s ease'
                       }}
                     >
-                      <TableCell>
+                      <TableCell sx={{color:"#312e81 !important"}}>
                         {new Date(sale.soldAt || sale.createdAt).toLocaleDateString()}
                       </TableCell>
 
-                      <TableCell>{sale.invoiceNumber || "—"}</TableCell>
+                      <TableCell sx={{color:"#312e81 !important"}}>{sale.invoiceNumber || "—"}</TableCell>
 
-                      <TableCell>
+                      <TableCell sx={{color:"#312e81 !important"}}>
                         {sale.sales_items?.length === 0 ? (
                           <Typography variant="body2" color="text.secondary">
                             No items
                           </Typography>
                         ) : (
-                          <Box>
+                          <Box >
                             {sale.sales_items.map((item) => (
-                              <Typography key={item._id} variant="body2">
+                              <Typography sx={{color:"#312e81 !important"}} key={item._id} variant="body2">
                                 • {item.productId?.name || "Unknown Product"} (
                                 {item.quantity} × ₹{item.sell_price})
                               </Typography>
@@ -169,7 +169,7 @@ const SalesTable = () => {
                         )}
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell sx={{color:"#312e81 !important"}}>
                         <strong>₹{sale.total || 0}</strong>
                       </TableCell>
 

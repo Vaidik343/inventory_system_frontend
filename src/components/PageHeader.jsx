@@ -5,7 +5,7 @@ const PageHeader = ({ icon: Icon, title, subtitle }) => {
     return (
         <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                {Icon && <Icon sx={{ fontSize: 30, color: 'black', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} />}
+                {Icon && <Icon sx={{ fontSize: 30, color: '#2a2893', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }} />}
                 <Typography
                     variant="h4"
                     sx={{

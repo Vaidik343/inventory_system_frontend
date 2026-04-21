@@ -85,7 +85,7 @@ const StockTable = () => {
                 transition: 'all 0.3s ease'
               }}
             >
-              <TableCell>{getProductName(adj.productId)}</TableCell>
+              <TableCell sx={{fontWeight:500 ,color:"#312e81 !important"}}>{getProductName(adj.productId)}</TableCell>
 
               <TableCell>
                 <Typography
@@ -104,22 +104,23 @@ const StockTable = () => {
                 </Typography>
               </TableCell>
 
-              <TableCell>
-                <Typography variant="body2" color="text.secondary">
-                  {adj.reason}
+              <TableCell  >
+                <Typography variant="body2" color="#312e81">
+                  {/* {user.role?.name || user.role} */}
+                  {adj.reason?.name || adj.reason}
                 </Typography>
               </TableCell>
 
-              <TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>
                 {adj.referenceId || "—"}
               </TableCell>
 
-              <TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>
                 {getUserName(adj.changedBy)}
               </TableCell>
 
-              <TableCell>
-                <Typography variant="body2" color="text.secondary">
+              <TableCell >
+                <Typography variant="body2" color="#312e81">
                   {new Date(adj.createdAt).toLocaleString()}
                 </Typography>
               </TableCell>

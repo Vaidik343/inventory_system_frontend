@@ -228,7 +228,7 @@ export default function ResponsiveDrawer(props) {
             fontWeight={800}
             fontSize={20}
             sx={{
-              color: '#6366f1',
+              color: '#ffff',
             }}
           >
             📦 Inventory Pro
@@ -264,7 +264,7 @@ export default function ResponsiveDrawer(props) {
                 >
                   <ListItemIcon
                     sx={{
-                      color: active ? 'white' : 'text.secondary',
+                      color: active ? 'white' : '#26238c',
                       minWidth: 36,
                     }}
                   >

@@ -78,16 +78,16 @@ const SupplierTable = () => {
                 transition: 'all 0.3s ease'
               }}
             >
-              <TableCell>{sup.name}</TableCell>
-              <TableCell>{sup.contact_person}</TableCell>
-              <TableCell>{sup.email}</TableCell>
-              <TableCell>{sup.phone}</TableCell>
-              <TableCell>{sup.payment_term}</TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>{sup.name}</TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>{sup.contact_person}</TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>{sup.email}</TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>{sup.phone}</TableCell>
+              <TableCell sx={{color:"#312e81 !important"}}>{sup.payment_term}</TableCell>
 
               {/* Address */}
               <TableCell>
                 {sup.address ? (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="#312e81">
                     {`${sup.address.street}, ${sup.address.city}, ${sup.address.country} - ${sup.address.pin_code}`}
                   </Typography>
                 ) : (
@@ -97,7 +97,7 @@ const SupplierTable = () => {
 
               <TableCell>
                 {sup.note ? (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="#312e81">
                     {sup.note}
                   </Typography>
                 ) : (

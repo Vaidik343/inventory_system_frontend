@@ -109,8 +109,8 @@ const ProductTable = () => {
                 },
               }}
             >
-              <TableCell sx={{ fontWeight: 600 }}>{product.name}</TableCell>
-              <TableCell sx={{ fontFamily: 'monospace', color: 'text.secondary' }}>{product.sku}</TableCell>
+              <TableCell sx={{ fontWeight: 500, color:"#312e81 !important"}} >{product.name}</TableCell>
+              <TableCell sx={{ fontFamily: 'monospace', color: '#312e81 !important' }}>{product.sku}</TableCell>
 
               {/* Category Name */}
               <TableCell>
@@ -148,11 +148,11 @@ const ProductTable = () => {
                 ))}
               </TableCell>
 
-              <TableCell>{product.unit}</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 600 }}>₹{product.cost}</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 700, color: 'success.main' }}>₹{product.sell_price}</TableCell>
-              <TableCell align="right">{product.tax_rate}%</TableCell>
-              <TableCell align="right">
+              <TableCell sx={{color:"#312e81 !important"}}>{product.unit}</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 550, color:"#312e81 !important" }}>₹{product.cost}</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 560, color:"#312e81 !important" }}>₹{product.sell_price}</TableCell>
+              <TableCell align="right" sx={{color:"#312e81 !important"}}>{product.tax_rate}%</TableCell>
+              <TableCell align="right" >
                 <Chip
                   label={product.stock_qty}
                   size="small"
@@ -191,3 +191,4 @@ const ProductTable = () => {
 };
 
 export default ProductTable;
+// #312e81

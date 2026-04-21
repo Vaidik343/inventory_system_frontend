@@ -19,6 +19,7 @@ export const StockAdjustmentProvider = ({ children }) => {
       const { data } = await api.post(
         ENDPOINTS.STOCKADJUSTMENT.CREATE,payload
       );
+      console.log("🚀 ~ StockAdjustmentProvider ~ data:", data)
       setStk((prev) => [...prev, data]);
       return data;
     } catch (error) {
