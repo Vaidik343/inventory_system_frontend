@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Grid,
@@ -16,6 +16,7 @@ import {
     ListItemText,
     Switch,
     Paper,
+    CircularProgress
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import EmailIcon from '@mui/icons-material/Email';
@@ -31,6 +32,9 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { useAuth } from '../context/AuthContext';
+import api from '../api/axiosInstance';
+import { ENDPOINTS } from '../api/endpoints';
 
 const GlassCard = styled(Card)({
     background: 'rgba(255,255,255,0.85)',
@@ -62,12 +66,19 @@ const StatBox = styled(Box)(({ gradient }) => ({
 }));
 
 const Profile = () => {
+    const { user } = useAuth();
     const [editMode, setEditMode] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [settings, setSettings] = useState({
         emailNotifications: true,
         pushNotifications: false,
         darkMode: false,
         autoBackup: true,
+    });
+    const [stats, setStats] = useState({
+        products: 0,
+        orders: 0,
+        suppliers: 0
     });
 
     const handleSettingChange = (setting) => {
@@ -77,11 +88,52 @@ const Profile = () => {
         }));
     };
 
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const fetchSafe = async (request) => {
+                    try {
+                        const res = await request;
+                        return res.data;
+                    } catch (error) {
+                        return null; // Return null on error (e.g., 404)
+                    }
+                };
+
+                const [productsData, salesDataRaw, suppliersData] = await Promise.all([
+                    fetchSafe(api.get(ENDPOINTS.PRODUCTS.ALL)),
+                    fetchSafe(api.get(ENDPOINTS.SALES.ALL)),
+                    fetchSafe(api.get(ENDPOINTS.SUPPLIER.ALL))
+                ]);
+
+                setStats({
+                    products: productsData?.length || 0,
+                    orders: salesDataRaw?.sales?.length || 0,
+                    suppliers: suppliersData?.length || 0
+                });
+            } catch (error) {
+                console.error("Failed to fetch profile stats", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStats();
+    }, []);
+
     const userStats = [
-        { label: 'Products Added', value: '247', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-        { label: 'Orders Managed', value: '1,234', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-        { label: 'Suppliers', value: '45', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
+        { label: 'Products Added', value: stats.products.toLocaleString(), gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+        { label: 'Orders Managed', value: stats.orders.toLocaleString(), gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
+        { label: 'Suppliers', value: stats.suppliers.toLocaleString(), gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
     ];
+
+    if (loading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return (
         <Box>
@@ -110,18 +162,18 @@ const Profile = () => {
                     <GlassCard>
                         <CardContent sx={{ textAlign: 'center', pt: 4 }}>
                             <GradientAvatar sx={{ mx: 'auto', mb: 2 }}>
-                                VK
+                                {user?.name ? user.name.substring(0, 2).toUpperCase() : 'AD'}
                             </GradientAvatar>
 
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 1 }}>
                                 <Typography variant="h5" sx={{ fontWeight: 700 }}>
-                                    Vaidik Kumar
+                                    {user?.name || 'Admin User'}
                                 </Typography>
                                 <VerifiedIcon sx={{ color: '#667eea', fontSize: 20 }} />
                             </Box>
 
                             <Chip
-                                label="Admin"
+                                label={user?.role?.name || user?.role || 'Administrator'}
                                 size="small"
                                 sx={{
                                     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -138,7 +190,7 @@ const Profile = () => {
                                     </ListItemIcon>
                                     <ListItemText
                                         primary="Email"
-                                        secondary="vaidik@example.com"
+                                        secondary={user?.email || 'admin@example.com'}
                                         secondaryTypographyProps={{ sx: { fontWeight: 600 } }}
                                     />
                                 </ListItem>
@@ -231,7 +283,7 @@ const Profile = () => {
                                         <TextField
                                             fullWidth
                                             label="First Name"
-                                            defaultValue="Vaidik"
+                                            defaultValue={user?.name ? user.name.split(' ')[0] : 'Admin'}
                                             disabled={!editMode}
                                             variant="outlined"
                                         />
@@ -240,7 +292,7 @@ const Profile = () => {
                                         <TextField
                                             fullWidth
                                             label="Last Name"
-                                            defaultValue="Kumar"
+                                            defaultValue={user?.name && user.name.split(' ').length > 1 ? user.name.split(' ').slice(1).join(' ') : 'User'}
                                             disabled={!editMode}
                                             variant="outlined"
                                         />
@@ -249,7 +301,7 @@ const Profile = () => {
                                         <TextField
                                             fullWidth
                                             label="Email"
-                                            defaultValue="vaidik@example.com"
+                                            defaultValue={user?.email || 'admin@example.com'}
                                             disabled={!editMode}
                                             variant="outlined"
                                         />

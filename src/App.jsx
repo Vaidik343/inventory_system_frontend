@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Drawer from "./components/Drawer";
 
 /* Pages */
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./pages/Dashboard";
 import Products from "./pages/Products";
 import Categories from "./pages/Categories";
 import Supplier from "./pages/Supplier";
@@ -34,7 +34,7 @@ function App() {
           <Route path="/reports" element={<Report />} />
           <Route path="/sales" element={<Sales />} />
           <Route path="/stock" element={<StockAdjustment />} />
-          {/* <Route path="/setting" element={<Settings />} /> */}
+          <Route path="/setting" element={<Settings />} />
           <Route path="/user" element={<User />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/notifications" element={<Notifications />} />

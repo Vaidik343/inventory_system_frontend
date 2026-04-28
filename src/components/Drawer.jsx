@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -31,6 +31,8 @@ import { alpha, styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from "../context/AuthContext";
 
 const drawerWidth = 260;
 
@@ -101,6 +103,14 @@ export default function ResponsiveDrawer(props) {
     { text: "Users", icon: <PeopleIcon />, path: "/user" },
   ];
 
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
   const drawer = (
     <div>
       <Toolbar >
@@ -120,6 +130,13 @@ export default function ResponsiveDrawer(props) {
             </ListItemButton>
           </ListItem>
         ))}
+        <Divider />
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleLogout}>
+            <ListItemIcon><LogoutIcon /></ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </div>
   );
@@ -282,6 +299,29 @@ export default function ResponsiveDrawer(props) {
               </ListItem>
             );
           })}
+          <Divider sx={{ my: 1, borderColor: 'rgba(255,255,255,0.1)' }} />
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={handleLogout}
+              sx={{
+                borderRadius: 2,
+                mx: 1,
+                color: 'white',
+                "&:hover": {
+                  background: 'rgba(239, 68, 68, 0.2)',
+                  transform: 'translateX(4px)',
+                },
+              }}
+            >
+              <ListItemIcon sx={{ color: 'white', minWidth: 36 }}>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Logout"
+                primaryTypographyProps={{ fontSize: 14, fontWeight: 500 }}
+              />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
 

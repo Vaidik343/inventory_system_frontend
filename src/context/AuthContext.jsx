@@ -50,6 +50,7 @@ const login = async (payload) => {
     try {
         setLoading(true);
         const {data} = await api.post(ENDPOINTS.AUTH.LOGIN, payload);
+        console.log("🚀 ~ login ~ data:", data)
 
         // const {accessToken} = data;
         // setAccessToken(accessToken);

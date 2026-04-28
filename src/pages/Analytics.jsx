@@ -1,326 +1,221 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo } from "react";
 import {
-    Box,
-    Grid,
-    Card,
-    CardContent,
-    Typography,
-    Tab,
-    Tabs,
-    Paper,
-    Chip,
-    Avatar,
-    LinearProgress,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import PieChartIcon from '@mui/icons-material/PieChart';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import StarIcon from '@mui/icons-material/Star';
+  Grid,
+  Paper,
+  Box,
+  Typography,
+} from "@mui/material";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  LineChart,
+  Line,
+} from "recharts";
+import PageHeader from "../components/PageHeader";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import { useProduct } from "../context/ProductContext";
+import { useCategory } from "../context/CategoryContext";
+import { useSales } from "../context/SalesContext";
+import { usePurchase } from "../context/PurchaseContext";
 
-const GlassCard = styled(Card)({
-    background: 'rgba(255,255,255,0.85)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    borderRadius: '20px',
-    boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
-    transition: 'transform 0.3s ease',
-    '&:hover': {
-        transform: 'translateY(-5px)',
-    },
-});
-
-const GradientBox = styled(Box)(({ gradientColor }) => ({
-    background: gradientColor || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    borderRadius: '16px',
-    padding: '24px',
-    color: 'white',
-    position: 'relative',
-    overflow: 'hidden',
-    '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: '-50%',
-        right: '-50%',
-        width: '200%',
-        height: '200%',
-        background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-        animation: 'pulse 4s ease-in-out infinite',
-    },
-}));
+const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6", "#06b6d4"];
 
 const Analytics = () => {
-    const [tabValue, setTabValue] = useState(0);
+  const { products, getAllProducts } = useProduct();
+  const { categories, getAllCategories } = useCategory();
+  const { sales, getAllSales } = useSales();
+  const { purchases, getAllPurchase } = usePurchase();
 
-    const handleTabChange = (event, newValue) => {
-        setTabValue(newValue);
-    };
+  useEffect(() => {
+    getAllProducts();
+    getAllCategories();
+    getAllSales();
+    getAllPurchase();
+  }, []);
 
-    const salesData = [
-        { month: 'Jan', revenue: 45000, orders: 234, growth: '+12%' },
-        { month: 'Feb', revenue: 52000, orders: 287, growth: '+15%' },
-        { month: 'Mar', revenue: 48000, orders: 251, growth: '-8%' },
-        { month: 'Apr', revenue: 61000, orders: 312, growth: '+27%' },
-        { month: 'May', revenue: 58000, orders: 298, growth: '-5%' },
-        { month: 'Jun', revenue: 67000, orders: 345, growth: '+16%' },
-    ];
+  // Category Distribution Data
+  const categoryData = useMemo(() => {
+    const counts = {};
+    products.forEach((p) => {
+      const catId = p.categoryId?.[0];
+      const catName = categories.find((c) => c._id === catId)?.name || "Uncategorized";
+      counts[catName] = (counts[catName] || 0) + 1;
+    });
 
-    const topProducts = [
-        { name: 'MacBook Pro 16"', sold: 145, revenue: '$289,550', category: 'Electronics' },
-        { name: 'iPhone 15 Pro', sold: 234, revenue: '$233,766', category: 'Electronics' },
-        { name: 'Nike Air Max', sold: 189, revenue: '$28,350', category: 'Clothing' },
-        { name: 'Sony WH-1000XM5', sold: 167, revenue: '$66,800', category: 'Electronics' },
-        { name: 'Samsung Galaxy S24', sold: 143, revenue: '$114,400', category: 'Electronics' },
-    ];
+    return Object.keys(counts).map((name) => ({
+      name,
+      value: counts[name],
+    }));
+  }, [products, categories]);
 
-    const categoryPerformance = [
-        { category: 'Electronics', sales: 85, color: '#667eea' },
-        { category: 'Clothing', sales: 65, color: '#f093fb' },
-        { category: 'Food & Beverage', sales: 92, color: '#4facfe' },
-        { category: 'Home & Garden', sales: 78, color: '#fa709a' },
-        { category: 'Sports', sales: 54, color: '#feca57' },
-    ];
+  // Sales vs Purchases Data (Last 30 days)
+  const comparisonData = useMemo(() => {
+    const last30Days = Array.from({ length: 30 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      return d.toISOString().split("T")[0];
+    }).reverse();
 
-    return (
-        <Box>
-            {/* Header */}
-            <Box sx={{ mb: 4 }}>
-                <Typography
-                    variant="h4"
-                    sx={{
-                        fontWeight: 800,
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        mb: 1,
-                    }}
+    return last30Days.map((date) => {
+      const daySales = sales
+        .filter((s) => s.createdAt?.split("T")[0] === date)
+        .reduce((acc, s) => acc + (s.grandTotal || 0), 0);
+      
+      const dayPurchases = purchases
+        .filter((p) => p.createdAt?.split("T")[0] === date)
+        .reduce((acc, p) => acc + (p.grandTotal || 0), 0);
+
+      return {
+        date: date.slice(5),
+        sales: daySales,
+        purchases: dayPurchases,
+      };
+    }).filter(d => d.sales > 0 || d.purchases > 0); // Only show days with activity
+  }, [sales, purchases]);
+
+  // Stock Value by Category
+  const stockValueData = useMemo(() => {
+    const values = {};
+    products.forEach((p) => {
+      const catId = p.categoryId?.[0];
+      const catName = categories.find((c) => c._id === catId)?.name || "Uncategorized";
+      const val = (p.stock_qty || 0) * (p.cost || 0);
+      values[catName] = (values[catName] || 0) + val;
+    });
+
+    return Object.keys(values).map((name) => ({
+      name,
+      value: Math.round(values[name]),
+    })).sort((a, b) => b.value - a.value);
+  }, [products, categories]);
+
+  return (
+    <Box>
+      <PageHeader
+        title="Analytics & Insights"
+        subtitle="Deep dive into your inventory performance and financial trends."
+        icon={BarChartIcon}
+      />
+
+      <Grid container spacing={3}>
+        {/* Sales vs Purchases */}
+        <Grid item xs={12}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: "24px",
+              background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255, 255, 255, 0.3)",
+              height: "450px",
+            }}
+          >
+            <Typography variant="h6" fontWeight={700} mb={3}>
+              Revenue vs. Expenditure (Last 30 Days)
+            </Typography>
+            <ResponsiveContainer width="100%" height="90%">
+              <BarChart data={comparisonData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} />
+                <YAxis axisLine={false} tickLine={false} />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: "12px",
+                    border: "none",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                  }}
+                />
+                <Legend iconType="circle" />
+                <Bar dataKey="sales" name="Sales Revenue" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="purchases" name="Purchase Cost" fill="#ec4899" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+
+        {/* Category Distribution */}
+        <Grid item xs={12} md={6}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: "24px",
+              background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255, 255, 255, 0.3)",
+              height: "450px",
+            }}
+          >
+            <Typography variant="h6" fontWeight={700} mb={3}>
+              Product Distribution by Category
+            </Typography>
+            <ResponsiveContainer width="100%" height="90%">
+              <PieChart>
+                <Pie
+                  data={categoryData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={80}
+                  outerRadius={120}
+                  paddingAngle={5}
+                  dataKey="value"
+                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
-                    Analytics & Insights
-                </Typography>
-                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                    Track your business performance and discover trends
-                </Typography>
-            </Box>
+                  {categoryData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend verticalAlign="bottom" height={36}/>
+              </PieChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
 
-            {/* Tabs */}
-            <Paper sx={{ mb: 3, borderRadius: '16px', overflow: 'hidden' }}>
-                <Tabs
-                    value={tabValue}
-                    onChange={handleTabChange}
-                    sx={{
-                        '& .MuiTab-root': {
-                            textTransform: 'none',
-                            fontWeight: 600,
-                            fontSize: '15px',
-                        },
-                    }}
-                >
-                    <Tab icon={<ShowChartIcon />} iconPosition="start" label="Sales Overview" />
-                    <Tab icon={<PieChartIcon />} iconPosition="start" label="Category Performance" />
-                    <Tab icon={<TimelineIcon />} iconPosition="start" label="Trends" />
-                </Tabs>
-            </Paper>
-
-            {/* Tab Content */}
-            {tabValue === 0 && (
-                <Grid container spacing={3}>
-                    {/* Revenue Cards */}
-                    <Grid item xs={12} md={4}>
-                        <GradientBox gradientColor="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
-                            <Typography variant="h6" sx={{ mb: 2, opacity: 0.9 }}>
-                                Total Revenue
-                            </Typography>
-                            <Typography variant="h3" sx={{ fontWeight: 800, mb: 1 }}>
-                                $331,000
-                            </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <TrendingUpIcon />
-                                <Typography variant="body2">+18.2% from last period</Typography>
-                            </Box>
-                        </GradientBox>
-                    </Grid>
-
-                    <Grid item xs={12} md={4}>
-                        <GradientBox gradientColor="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)">
-                            <Typography variant="h6" sx={{ mb: 2, opacity: 0.9 }}>
-                                Total Orders
-                            </Typography>
-                            <Typography variant="h3" sx={{ fontWeight: 800, mb: 1 }}>
-                                1,727
-                            </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <TrendingUpIcon />
-                                <Typography variant="body2">+12.5% from last period</Typography>
-                            </Box>
-                        </GradientBox>
-                    </Grid>
-
-                    <Grid item xs={12} md={4}>
-                        <GradientBox gradientColor="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)">
-                            <Typography variant="h6" sx={{ mb: 2, opacity: 0.9 }}>
-                                Average Order Value
-                            </Typography>
-                            <Typography variant="h3" sx={{ fontWeight: 800, mb: 1 }}>
-                                $192
-                            </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <TrendingUpIcon />
-                                <Typography variant="body2">+5.1% from last period</Typography>
-                            </Box>
-                        </GradientBox>
-                    </Grid>
-
-                    {/* Monthly Sales Table */}
-                    <Grid item xs={12}>
-                        <GlassCard>
-                            <CardContent>
-                                <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
-                                    Monthly Sales Breakdown
-                                </Typography>
-                                <TableContainer>
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell sx={{ fontWeight: 700 }}>Month</TableCell>
-                                                <TableCell sx={{ fontWeight: 700 }}>Revenue</TableCell>
-                                                <TableCell sx={{ fontWeight: 700 }}>Orders</TableCell>
-                                                <TableCell sx={{ fontWeight: 700 }}>Growth</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {salesData.map((row) => (
-                                                <TableRow key={row.month} hover>
-                                                    <TableCell sx={{ fontWeight: 600 }}>{row.month}</TableCell>
-                                                    <TableCell>${row.revenue.toLocaleString()}</TableCell>
-                                                    <TableCell>{row.orders}</TableCell>
-                                                    <TableCell>
-                                                        <Chip
-                                                            label={row.growth}
-                                                            size="small"
-                                                            sx={{
-                                                                background: row.growth.startsWith('+')
-                                                                    ? 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
-                                                                    : 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)',
-                                                                color: 'white',
-                                                                fontWeight: 600,
-                                                            }}
-                                                        />
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </CardContent>
-                        </GlassCard>
-                    </Grid>
-                </Grid>
-            )}
-
-            {tabValue === 1 && (
-                <Grid container spacing={3}>
-                    {/* Top Products */}
-                    <Grid item xs={12} lg={8}>
-                        <GlassCard>
-                            <CardContent>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-                                    <StarIcon sx={{ color: '#feca57' }} />
-                                    <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                        Top Selling Products
-                                    </Typography>
-                                </Box>
-                                <TableContainer>
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell sx={{ fontWeight: 700 }}>Product</TableCell>
-                                                <TableCell sx={{ fontWeight: 700 }}>Category</TableCell>
-                                                <TableCell sx={{ fontWeight: 700 }}>Units Sold</TableCell>
-                                                <TableCell sx={{ fontWeight: 700 }}>Revenue</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {topProducts.map((product, index) => (
-                                                <TableRow key={index} hover>
-                                                    <TableCell sx={{ fontWeight: 600 }}>{product.name}</TableCell>
-                                                    <TableCell>
-                                                        <Chip label={product.category} size="small" />
-                                                    </TableCell>
-                                                    <TableCell>{product.sold}</TableCell>
-                                                    <TableCell sx={{ fontWeight: 700, color: '#667eea' }}>
-                                                        {product.revenue}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </CardContent>
-                        </GlassCard>
-                    </Grid>
-
-                    {/* Category Performance */}
-                    <Grid item xs={12} lg={4}>
-                        <GlassCard>
-                            <CardContent>
-                                <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>
-                                    Category Performance
-                                </Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                    {categoryPerformance.map((item, index) => (
-                                        <Box key={index}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                                <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                                                    {item.category}
-                                                </Typography>
-                                                <Typography variant="body2" sx={{ fontWeight: 700, color: item.color }}>
-                                                    {item.sales}%
-                                                </Typography>
-                                            </Box>
-                                            <LinearProgress
-                                                variant="determinate"
-                                                value={item.sales}
-                                                sx={{
-                                                    height: 10,
-                                                    borderRadius: 5,
-                                                    backgroundColor: 'rgba(0,0,0,0.05)',
-                                                    '& .MuiLinearProgress-bar': {
-                                                        background: `linear-gradient(90deg, ${item.color}aa, ${item.color})`,
-                                                        borderRadius: 5,
-                                                    },
-                                                }}
-                                            />
-                                        </Box>
-                                    ))}
-                                </Box>
-                            </CardContent>
-                        </GlassCard>
-                    </Grid>
-                </Grid>
-            )}
-
-            {tabValue === 2 && (
-                <GlassCard>
-                    <CardContent sx={{ textAlign: 'center', py: 8 }}>
-                        <TimelineIcon sx={{ fontSize: 80, color: 'primary.main', mb: 2 }} />
-                        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-                            Trend Analysis Coming Soon
-                        </Typography>
-                        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                            Advanced trend analytics and forecasting will be available here
-                        </Typography>
-                    </CardContent>
-                </GlassCard>
-            )}
-        </Box>
-    );
+        {/* Stock Value by Category */}
+        <Grid item xs={12} md={6}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: "24px",
+              background: "rgba(255, 255, 255, 0.05)",
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255, 255, 255, 0.3)",
+              height: "450px",
+            }}
+          >
+            <Typography variant="h6" fontWeight={700} mb={3}>
+              Stock Value by Category (₹)
+            </Typography>
+            <ResponsiveContainer width="100%" height="90%">
+              <BarChart layout="vertical" data={stockValueData} margin={{ left: 40, right: 40 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgba(0,0,0,0.05)" />
+                <XAxis type="number" axisLine={false} tickLine={false} hide />
+                <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} width={100} />
+                <Tooltip
+                  formatter={(value) => `₹${value.toLocaleString()}`}
+                  contentStyle={{
+                    borderRadius: "12px",
+                    border: "none",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                  }}
+                />
+                <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Box>
+  );
 };
 
 export default Analytics;
