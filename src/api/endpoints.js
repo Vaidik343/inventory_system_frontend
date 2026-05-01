@@ -63,5 +63,9 @@ export const ENDPOINTS = {
         MY_PERMISSIONS: "/me/permissions",
         GRANT_PERMISSION: (id) => `/user/${id}/permission/grant`,
         REVOKE_PERMISSION: (id) => `/user/${id}/permission/revoke`
+    },
+    DASHBOARD: {
+        STATS: "/dashboard/stats",
+        ANALYTICS: "/dashboard/analytics"
     }
 }  

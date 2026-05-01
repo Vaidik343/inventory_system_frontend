@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Paper,
@@ -6,20 +6,15 @@ import {
   Typography,
   Card,
   CardContent,
-  IconButton,
-  Divider,
+  CircularProgress,
 } from "@mui/material";
 import {
-  TrendingUp,
   Inventory,
   Category,
-  ShoppingCart,
   Warning,
   AttachMoney,
 } from "@mui/icons-material";
 import {
-  BarChart,
-  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -30,10 +25,9 @@ import {
 } from "recharts";
 import PageHeader from "../components/PageHeader";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { useProduct } from "../context/ProductContext";
-import { useCategory } from "../context/CategoryContext";
-import { useSales } from "../context/SalesContext";
-import { usePurchase } from "../context/PurchaseContext";
+import axiosInstance from "../api/axiosInstance";
+import { ENDPOINTS } from "../api/endpoints";
+import toast from "react-hot-toast";
 
 const StatCard = ({ title, value, icon: Icon, color, trend }) => (
   <Card
@@ -96,50 +90,43 @@ const StatCard = ({ title, value, icon: Icon, color, trend }) => (
 );
 
 const Dashboard = () => {
-  const { products, getAllProducts } = useProduct();
-  const { categories, getAllCategories } = useCategory();
-  const { sales, getAllSales } = useSales();
-  const { purchases, getAllPurchase } = usePurchase();
+  const [stats, setStats] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAllProducts();
-    getAllCategories();
-    getAllSales();
-    getAllPurchase();
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const [statsRes, analyticsRes] = await Promise.all([
+          axiosInstance.get(ENDPOINTS.DASHBOARD.STATS),
+          axiosInstance.get(ENDPOINTS.DASHBOARD.ANALYTICS),
+        ]);
+        setStats(statsRes.data);
+        setAnalytics(analyticsRes.data);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        toast.error("Failed to load dashboard data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
   }, []);
 
-  const stats = useMemo(() => {
-    const totalProducts = products.length;
-    const totalCategories = categories.length;
-    const totalSales = sales.reduce((acc, sale) => acc + (sale.grandTotal || 0), 0);
-    const lowStockItems = products.filter((p) => p.stock_qty < 10).length;
-    const outOfStock = products.filter((p) => p.stock_qty === 0).length;
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
-    return {
-      totalProducts,
-      totalCategories,
-      totalSales: `₹${totalSales.toLocaleString()}`,
-      lowStockItems,
-      outOfStock,
-    };
-  }, [products, categories, sales]);
-
-  // Sample data for charts - in a real app, this would come from an analytics API
-  const chartData = useMemo(() => {
-    // Group sales by date
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      return d.toISOString().split("T")[0];
-    }).reverse();
-
-    return last7Days.map((date) => {
-      const daySales = sales
-        .filter((s) => s.createdAt?.split("T")[0] === date)
-        .reduce((acc, s) => acc + (s.grandTotal || 0), 0);
-      return { name: date.slice(5), sales: daySales };
-    });
-  }, [sales]);
+  // Format chart data
+  const chartData = analytics?.salesTrend?.map(item => ({
+    name: item._id.split('-').slice(1).join('-'), // "MM-DD"
+    sales: item.dailyRevenue
+  })) || [];
 
   return (
     <Box>
@@ -153,7 +140,7 @@ const Dashboard = () => {
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
             title="Total Products"
-            value={stats.totalProducts}
+            value={stats?.totalProducts || 0}
             icon={Inventory}
             color="#6366f1"
           />
@@ -161,7 +148,7 @@ const Dashboard = () => {
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
             title="Total Sales"
-            value={stats.totalSales}
+            value={`₹${(stats?.salesData?.totalRevenue || 0).toLocaleString()}`}
             icon={AttachMoney}
             color="#10b981"
           />
@@ -169,7 +156,7 @@ const Dashboard = () => {
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
             title="Low Stock"
-            value={stats.lowStockItems}
+            value={stats?.lowStockProducts?.length || 0}
             icon={Warning}
             color="#f59e0b"
           />
@@ -177,7 +164,7 @@ const Dashboard = () => {
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
             title="Categories"
-            value={stats.totalCategories}
+            value={stats?.totalCategories || 0}
             icon={Category}
             color="#ec4899"
           />
@@ -246,45 +233,42 @@ const Dashboard = () => {
               Recent Stock Alerts
             </Typography>
             <Box sx={{ flexGrow: 1, overflow: "auto" }}>
-              {products
-                .filter((p) => p.stock_qty < 10)
-                .slice(0, 5)
-                .map((product) => (
+              {stats?.lowStockProducts?.slice(0, 5).map((product) => (
+                <Box
+                  key={product._id}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                    mb: 2,
+                    p: 1.5,
+                    borderRadius: "16px",
+                    background: "rgba(245, 158, 11, 0.05)",
+                    border: "1px solid rgba(245, 158, 11, 0.1)",
+                  }}
+                >
                   <Box
-                    key={product._id}
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 2,
-                      mb: 2,
-                      p: 1.5,
-                      borderRadius: "16px",
-                      background: "rgba(245, 158, 11, 0.05)",
-                      border: "1px solid rgba(245, 158, 11, 0.1)",
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      background: product.stock_qty === 0 ? "#ef4444" : "#f59e0b",
                     }}
-                  >
-                    <Box
-                      sx={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: "50%",
-                        background: product.stock_qty === 0 ? "#ef4444" : "#f59e0b",
-                      }}
-                    />
-                    <Box flexGrow={1}>
-                      <Typography variant="body2" fontWeight={700}>
-                        {product.name}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        SKU: {product.sku}
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2" fontWeight={800} color="#1e1b4b">
-                      {product.stock_qty} left
+                  />
+                  <Box flexGrow={1}>
+                    <Typography variant="body2" fontWeight={700}>
+                      {product.name}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      SKU: {product.sku}
                     </Typography>
                   </Box>
-                ))}
-              {products.filter((p) => p.stock_qty < 10).length === 0 && (
+                  <Typography variant="body2" fontWeight={800} color="#1e1b4b">
+                    {product.stock_qty} left
+                  </Typography>
+                </Box>
+              ))}
+              {(!stats?.lowStockProducts || stats.lowStockProducts.length === 0) && (
                 <Box textAlign="center" py={4}>
                   <Inventory sx={{ fontSize: 48, color: "rgba(0,0,0,0.1)", mb: 1 }} />
                   <Typography variant="body2" color="text.secondary">
